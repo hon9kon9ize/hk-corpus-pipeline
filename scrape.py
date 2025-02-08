@@ -31,7 +31,9 @@ def main(num_proc=3):
 
         for article in tqdm(articles, desc=f"Uploading {key}"):
             # Convert article to a DataFrame
-            df = pd.DataFrame([article])
+            article_dict = article.to_dict()
+            df = pd.DataFrame([article_dict])
+
             # md5 of the article id
             article_id = hashlib.md5(article.id.encode()).hexdigest()
 
