@@ -1,0 +1,15 @@
+on:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    name: Pipeline
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build -t scrape . --file actions/scrape/Dockerfile
+      - name: Run Docker image
+        run: docker run scrape

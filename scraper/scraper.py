@@ -1,9 +1,8 @@
-from dataclasses import dataclass
-from abc import ABC, abstractmethod
-from typing import List, Any
 from datetime import datetime as DateTime
-from typing import Coroutine, List, Sequence
 import asyncio
+from pydantic.dataclasses import dataclass
+from abc import ABC, abstractmethod
+from typing import List, Any, Optional, Literal, Coroutine, Sequence
 
 
 def _limit_concurrency(
@@ -32,6 +31,7 @@ class ScraperOutput:
     id: str  # could be a URL or a unique identifier
     title: str
     content: str
+    category: Literal["news", "blog", "encyclopedia", "forum", "social_media"]
     author: str | None
     date: DateTime | None
     url: str | None
@@ -39,15 +39,30 @@ class ScraperOutput:
     def __repr__(self):
         return f"{self.title} by {self.author} on {self.date}"
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "category": self.category,
+            "content": self.content,
+            "author": self.author,
+            "date": self.date,
+            "url": self.url,
+        }
+
 
 class Scraper(ABC):
     """
     Base class for a scraper.
     """
 
-    def __init__(self, index_url: str, num_proc=1):
+    def __init__(
+        self, index_url: str, category: str, num_proc=1, max_items: Optional[int] = None
+    ):
         self.index_url = index_url
+        self.category = category
         self.num_proc = num_proc
+        self.max_items = max_items
 
     def __repr__(self):
         return self.index_url
@@ -89,6 +104,11 @@ class Scraper(ABC):
           List[ScraperOutput]: A list of ScraperOutput objects representing the articles.
         """
         article_indexes = await self.parse_index()
+        article_indexes = (
+            article_indexes[: self.max_items]
+            if self.max_items is not None
+            else article_indexes
+        )
 
         # fetch the articles
         article_items = await asyncio.gather(
@@ -99,7 +119,9 @@ class Scraper(ABC):
         )
 
         # postprocess the article items
-        articles = [self.parse_article(item) for item in article_items]
+        articles = [
+            self.parse_article(item) for item in article_items if item is not None
+        ]
 
         return articles
 

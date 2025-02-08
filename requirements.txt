@@ -1,3 +1,4 @@
-dataclasses
 aiohttp
 aiosocks
+pydantic
+tenacity

@@ -1,12 +1,12 @@
 from datetime import datetime as DateTime
 import asyncio
-from telegram_scraper import TelegramScraper
+from scraper.telegram_scraper import TelegramScraper
 
 
 class RTHKChineseTelegramScraper(TelegramScraper):
-    def __init__(self):
+    def __init__(self, **kwargs: dict) -> None:
         super().__init__(
-            "https://t.me/s/rthk_new_c",
+            index_url="https://t.me/s/rthk_new_c", category="news", **kwargs
         )
 
     def _parse_url(self, url: str) -> str:

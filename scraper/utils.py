@@ -1,10 +1,12 @@
 import aiohttp
+from tenacity import retry, stop_after_attempt, wait_fixed
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from aiosocks import Socks5Addr
 
 
+# @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_header_location(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10
 ) -> str:
@@ -22,6 +24,7 @@ async def fetch_header_location(
             return response.url
 
 
+# @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_content(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10
 ) -> str:
