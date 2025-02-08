@@ -1,6 +1,6 @@
 import re
 from scraper.utils import fetch_content
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from bs4 import BeautifulSoup
 from scraper.scraper import Scraper, ScraperOutput
 
@@ -20,8 +20,8 @@ class HTMLScraper(Scraper):
         item_title_selector: str,
         item_content_selector: str,
         item_date_selector: str,
-        item_url_selector: str | None = None,
-        item_author_selector: str | None = None,
+        item_url_selector: Optional[str] = None,
+        item_author_selector: Optional[str] = None,
         **kwargs,
     ):
         self.index_item_selector = index_item_selector
