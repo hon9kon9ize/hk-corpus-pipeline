@@ -16,5 +16,5 @@ jobs:
         run: |
           docker run --rm \
             -e HF_TOKEN="${{ secrets.HF_TOKEN }}" \
-            -e HF_REPO_NAME="${{ github.repository }}" \
+            -e HF_REPO_NAME="${{ github.HF_REPO_NAME }}" \
             scrape
