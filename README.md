@@ -47,6 +47,6 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 Fork this repository and add these secrets or environment variables to your repository:
 
 - `HF_TOKEN` - Hugging Face API token
-- `REPO_NAME` - Name of the repository to push the dataset to (e.g. `hon9kon9ize/yue-corpus`)
+- `HF_REPO_NAME` - Name of the repository to push the dataset to (e.g. `hon9kon9ize/yue-corpus`)
 
 Then Github workflows will automatically run the pipeline and push the dataset to your repository.

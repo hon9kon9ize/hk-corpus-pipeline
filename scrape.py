@@ -12,7 +12,7 @@ from huggingface_hub import HfApi
 if TYPE_CHECKING:
     from scraper.scraper import Scraper
 
-REPO_NAME = os.getenv("REPO_NAME")
+REPO_NAME = os.getenv("HF_REPO_NAME")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 api = HfApi(token=HF_TOKEN)
