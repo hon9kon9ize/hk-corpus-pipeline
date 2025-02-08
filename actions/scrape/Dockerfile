@@ -9,4 +9,4 @@ ENV HF_TOKEN=${HF_TOKEN}
 
 COPY . .
 
-CMD [ "scrape.py" ]
+CMD [ "python", "./scrape.py" ]
