@@ -1,5 +1,7 @@
 # Cantonese Text Corpus Pipeline
 
+[![.github/workflows/scrape.yml](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml/badge.svg)](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml)
+
 The goal of this project is create a pipeline and tools for scraping and processing Cantonese text data.
 
 | What kind of data are we looking for?
