@@ -32,9 +32,9 @@ class ScraperOutput:
     title: str
     content: str
     category: Literal["news", "blog", "encyclopedia", "forum", "social_media"]
-    author: str | None
-    date: DateTime | None
-    url: str | None
+    author: Optional[str]
+    date: Optional[DateTime]
+    url: Optional[str]
 
     def __repr__(self):
         return f"{self.title} by {self.author} on {self.date}"
