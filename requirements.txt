@@ -4,3 +4,4 @@ pydantic
 tenacity
 pandas
 tqdm
+bs4
