@@ -30,8 +30,9 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 ### News
 
 - RTHK News(Telegram) - https://t.me/s/rthk_new_c
-- HK01 (API) - https://web-data.api.hk01.com/v2/feed/tag/24014?offset=0&bucketId=00000
+- HK01 (API) - https://web-data.api.hk01.com/v2/feed/category/0?bucketId=00000
 - 獨立媒體 (Telegram) - https://t.me/s/inmediahknet
+- 星島頭條 (Web) - https://www.stheadline.com/
 - 政府新聞處 (Web) - https://www.info.gov.hk/gia/general/ctoday.htm
 - on.cc (API) - https://hk.on.cc/hk/bkn/js/20250205/news_dailyList.js
 - South China Morning Post (Telegram) - https://t.me/s/scmpfeed

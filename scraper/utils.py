@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from aiosocks import Socks5Addr
 
 
-# @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_header_location(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10
 ) -> str:
@@ -40,3 +40,19 @@ async def fetch_content(
     async with aiohttp.ClientSession(connector=conn) as session:
         async with session.get(url, timeout=timeout) as response:
             return await response.text()
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+async def fetch_json(url: str, conn: Optional["Socks5Addr"] = None, timeout=10) -> dict:
+    """
+    Get the JSON content of the URL.
+
+    Args:
+      url (str): The URL to fetch.
+
+    Returns:
+      dict: The JSON content of the URL.
+    """
+    async with aiohttp.ClientSession(connector=conn) as session:
+        async with session.get(url, timeout=timeout) as response:
+            return await response.json()

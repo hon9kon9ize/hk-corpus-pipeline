@@ -123,6 +123,9 @@ class Scraper(ABC):
             self.parse_article(item) for item in article_items if item is not None
         ]
 
+        # filter out None values
+        articles = [article for article in articles if article is not None]
+
         return articles
 
     async def fetch_article(self, index: Any) -> Any:
