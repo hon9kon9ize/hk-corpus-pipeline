@@ -3,7 +3,7 @@ from typing import Union
 from scraper.api_scraper import APIScraper
 
 
-class HK01(APIScraper):
+class HK01Scraper(APIScraper):
     def __init__(self, **kwargs):
         super().__init__(
             index_url="https://web-data.api.hk01.com/v2/feed/category/0?bucketId=00000",
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     import asyncio
 
     # Example usage
-    scraper = HK01(
+    scraper = HK01Scraper(
         num_proc=1,
     )
 

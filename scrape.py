@@ -7,6 +7,8 @@ from tqdm.auto import tqdm
 from typing import Dict, TYPE_CHECKING
 from scraper.rthk_zh import RTHKChineseTelegramScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
+from scraper.hk01 import HK01Scraper
+from scraper.stheadline import HeadlineScraper
 from huggingface_hub import HfApi
 
 if TYPE_CHECKING:
@@ -22,6 +24,8 @@ def main(num_proc=3):
     scrapers: Dict[str, Scraper] = {
         "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc),
         "RTHKChinese": RTHKChineseTelegramScraper(num_proc=num_proc),
+        "HK01": HK01Scraper(num_proc=num_proc),
+        "Headline": HeadlineScraper(num_proc=num_proc),
     }
     temp_dir = tempfile.TemporaryDirectory()
 
