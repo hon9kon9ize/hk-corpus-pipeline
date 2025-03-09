@@ -13,10 +13,11 @@ class HeadlineScraper(HTMLScraper):
         super().__init__(
             index_url="https://stheadline.com/realtimenews/即時",
             category="news",
+            content_type="text/html",
             index_item_selector=".news-block",
             item_id_selector="meta[property='og:url'][content]",
             item_title_selector="meta[property='og:title'][content]",
-            item_content_selector="meta[property='og:description'][content]",
+            item_content_selector=None,  # raw html content
             item_date_selector="meta[property='article:published_time'][content]",  # <meta property="article:published_time" content="???">
             item_url_selector="meta[property='og:url'][content]",  # <meta property="og:url" content="???">
             item_author_selector="meta[name='publisher'][content]",

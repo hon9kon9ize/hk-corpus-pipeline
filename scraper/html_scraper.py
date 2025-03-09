@@ -89,7 +89,11 @@ class HTMLScraper(Scraper):
 
         id_value = self._get_elem_text(tag, self.item_id_selector)
         title_value = self._get_elem_text(tag, self.item_title_selector)
-        content_value = self._get_elem_text(tag, self.item_content_selector)
+        content_value = (
+            self._get_elem_text(tag, self.item_content_selector)
+            if self.item_content_selector is not None
+            else str(tag.html)
+        )
         date_value = self._get_elem_text(tag, self.item_date_selector)
         author_value = (
             self._get_elem_text(tag, self.item_author_selector)

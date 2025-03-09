@@ -9,6 +9,8 @@ from scraper.rthk_zh import RTHKChineseTelegramScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
 from scraper.hk01 import HK01Scraper
 from scraper.stheadline import HeadlineScraper
+from scraper.rthk_zh import RTHKChineseScraper
+from scraper.rthk_en import RTHKEnglishScraper
 from huggingface_hub import HfApi
 
 if TYPE_CHECKING:
@@ -23,7 +25,9 @@ api = HfApi(token=HF_TOKEN)
 def main(num_proc=3):
     scrapers: Dict[str, Scraper] = {
         "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc),
-        "RTHKChinese": RTHKChineseTelegramScraper(num_proc=num_proc),
+        "RTHKChineseTelegram": RTHKChineseTelegramScraper(num_proc=num_proc),
+        "RTHKChinese": RTHKChineseScraper(num_proc=num_proc),
+        "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
         "HK01": HK01Scraper(num_proc=num_proc),
         "Headline": HeadlineScraper(num_proc=num_proc),
     }
@@ -36,6 +40,8 @@ def main(num_proc=3):
         for article in tqdm(articles, desc=f"Uploading {key}"):
             # Convert article to a DataFrame
             article_dict = article.to_dict()
+            article["content_type"] = scraper.content_type
+            article["category"] = scraper.category
             df = pd.DataFrame([article_dict])
 
             # md5 of the article id

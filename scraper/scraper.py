@@ -56,13 +56,21 @@ class Scraper(ABC):
     Base class for a scraper.
     """
 
+    content_type: Literal["text/html", "text/plain"] = "text/html"
+
     def __init__(
-        self, index_url: str, category: str, num_proc=1, max_items: Optional[int] = None
+        self,
+        index_url: str,
+        category: str,
+        content_type="text/html",
+        num_proc=1,
+        max_items: Optional[int] = None,
     ):
         self.index_url = index_url
         self.category = category
         self.num_proc = num_proc
         self.max_items = max_items
+        self.content_type = content_type
 
     def __repr__(self):
         return self.index_url
@@ -128,11 +136,11 @@ class Scraper(ABC):
 
         return articles
 
-    async def fetch_article(self, index: Any) -> Any:
+    async def fetch_article(self, item: Any) -> Any:
         """
-        Asynchronously fetches an article based on the given index.
+        Asynchronously fetches an article based on the given item.
         """
-        return index
+        return item
 
     def _parse_date(self, date: str) -> DateTime:
         """

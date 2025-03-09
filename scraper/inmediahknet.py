@@ -1,8 +1,8 @@
 from datetime import datetime as DateTime
 from typing import TYPE_CHECKING
 from scraper.utils import fetch_content
-from bs4 import BeautifulSoup
 from scraper.telegram_scraper import TelegramScraper
+from bs4 import BeautifulSoup
 
 if TYPE_CHECKING:
     from bs4.element import Tag, ResultSet  # for type hinting
@@ -13,9 +13,10 @@ class InMediaHKNetTelegramScraper(TelegramScraper):
         super().__init__(
             index_url="https://t.me/s/inmediahknet",
             category="news",
+            content_type="text/html",
             item_id_selector="meta[property='og:url'][content]",
             item_title_selector=".article-detail .title",
-            item_content_selector=".post-desc",
+            item_content_selector=None,  # html content
             item_date_selector="meta[property='article:published_time'][content]",  # <meta property="article:published_time" content="???">
             item_url_selector="meta[property='og:url'][content]",  # <meta property="og:url" content="???">
             item_author_selector="a.author",

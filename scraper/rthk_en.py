@@ -1,10 +1,10 @@
 from scraper.rss_scraper import RSSScraper
 
 
-class RTHKChineseScraper(RSSScraper):
+class RTHKEnglishScraper(RSSScraper):
     def __init__(self, **kwargs):
         super().__init__(
-            index_url="https://rthk9.rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",
+            index_url="https://rthk9.rthk.hk/rthk/news/rss/e_expressnews_elocal.xml",
             category="news",
             content_type="text/html",
             **kwargs
@@ -14,7 +14,7 @@ class RTHKChineseScraper(RSSScraper):
 if __name__ == "__main__":
     import asyncio
 
-    scraper = RTHKChineseScraper(num_proc=3)
+    scraper = RTHKEnglishScraper(num_proc=3)
     articles = asyncio.run(scraper.get_articles())
 
-    print(articles[0].content)
+    print(articles)
