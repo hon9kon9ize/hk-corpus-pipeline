@@ -40,8 +40,6 @@ def main(num_proc=3):
         for article in tqdm(articles, desc=f"Uploading {key}"):
             # Convert article to a DataFrame
             article_dict = article.to_dict()
-            article["content_type"] = scraper.content_type
-            article["category"] = scraper.category
             df = pd.DataFrame([article_dict])
 
             # md5 of the article id

@@ -31,6 +31,7 @@ class ScraperOutput:
     id: str  # could be a URL or a unique identifier
     title: str
     content: str
+    content_type: Literal["text/html", "text/plain"]
     category: Literal["news", "blog", "encyclopedia", "forum", "social_media"]
     author: Optional[str]
     date: Optional[DateTime]
@@ -133,6 +134,11 @@ class Scraper(ABC):
 
         # filter out None values
         articles = [article for article in articles if article is not None]
+
+        # add category and content type
+        for article in articles:
+            article.category = self.category
+            article.content_type = self.content_type
 
         return articles
 
