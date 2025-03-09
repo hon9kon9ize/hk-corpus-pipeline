@@ -5,7 +5,7 @@ import pandas as pd
 import tempfile
 from tqdm.auto import tqdm
 from typing import Dict, TYPE_CHECKING
-from scraper.rthk_zh import RTHKChineseTelegramScraper
+from scraper.rthk_zh_telegram import RTHKChineseTelegramScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
 from scraper.hk01 import HK01Scraper
 from scraper.stheadline import HeadlineScraper
