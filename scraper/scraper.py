@@ -135,11 +135,6 @@ class Scraper(ABC):
         # filter out None values
         articles = [article for article in articles if article is not None]
 
-        # add category and content type
-        for article in articles:
-            article.category = self.category
-            article.content_type = self.content_type
-
         return articles
 
     async def fetch_article(self, item: Any) -> Any:

@@ -103,6 +103,7 @@ class APIScraper(Scraper):
             article_id,
             title,
             category=self.category,
+            content_type=self.content_type,
             content=content,
             author=author,
             date=date,
