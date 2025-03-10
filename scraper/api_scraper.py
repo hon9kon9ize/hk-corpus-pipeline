@@ -38,7 +38,11 @@ class APIScraper(Scraper):
         """
         try:
             api_res = await fetch_json(self.index_url)
-            list_items = self._get_value(api_res, self.index_item_selector)
+            list_items = (
+                self._get_value(api_res, self.index_item_selector)
+                if self.index_item_selector is not None
+                else api_res
+            )
 
             return list_items
         except Exception as e:

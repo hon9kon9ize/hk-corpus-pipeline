@@ -20,6 +20,8 @@ from scraper.hk01 import HK01Scraper
 from scraper.stheadline import HeadlineScraper
 from scraper.rthk_zh import RTHKChineseScraper
 from scraper.rthk_en import RTHKEnglishScraper
+from scraper.oncc import ONCCScraper
+from scraper.scmp import SCMPScraper
 from huggingface_hub import HfApi
 
 if TYPE_CHECKING:
@@ -42,13 +44,13 @@ def is_rate_limit_error(exception):
     retry=retry_if_exception_type((requests.exceptions.HTTPError, ConnectionError)),
     stop=stop_after_attempt(7),  # Maximum 7 attempts
     wait=wait_exponential(
-        multiplier=1, min=4, max=60
+        multiplier=1, min=32, max=128
     ),  # Start with 4s, double each time, max 60s
     before_sleep=lambda retry_state: print(
         f"Rate limited. Retry attempt {retry_state.attempt_number}. Waiting {retry_state.next_action.sleep} seconds..."
     ),
 )
-def upload_to_hf(local_path, path_in_repo, repo_id, repo_type="dataset", wait_time=3):
+def upload_to_hf(local_path, path_in_repo, repo_id, repo_type="dataset", wait_time=5):
     # Add a wait time before each call, even on first attempt
     time.sleep(wait_time)
 
@@ -68,6 +70,8 @@ def main(num_proc=3):
         "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
         "HK01": HK01Scraper(num_proc=num_proc),
         "Headline": HeadlineScraper(num_proc=num_proc),
+        "On.cc": ONCCScraper(num_proc=num_proc),
+        "SCMP": SCMPScraper(num_proc=num_proc),
     }
     temp_dir = tempfile.TemporaryDirectory()
 

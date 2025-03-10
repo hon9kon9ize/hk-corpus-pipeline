@@ -24,7 +24,7 @@ async def fetch_header_location(
             return response.url
 
 
-# @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_content(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10
 ) -> str:
@@ -56,3 +56,16 @@ async def fetch_json(url: str, conn: Optional["Socks5Addr"] = None, timeout=10) 
     async with aiohttp.ClientSession(connector=conn) as session:
         async with session.get(url, timeout=timeout) as response:
             return await response.json()
+
+
+def text_processing(text: str) -> str:
+    """
+    Process text by removing extra spaces and newlines.
+
+    Args:
+      text (str): The text to process.
+
+    Returns:
+      str: The processed text.
+    """
+    return text.strip().replace("\u3000", "")

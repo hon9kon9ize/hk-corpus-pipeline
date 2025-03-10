@@ -36,6 +36,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - 政府新聞處 (Web) - https://www.info.gov.hk/gia/general/ctoday.htm
 - on.cc (API) - https://hk.on.cc/hk/bkn/js/20250205/news_dailyList.js
 - South China Morning Post (Telegram) - https://t.me/s/scmpfeed
+- 明報 (Web) - https://news.mingpao.com/
 
 ### Blogs
 

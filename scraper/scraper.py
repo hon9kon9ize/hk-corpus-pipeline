@@ -3,6 +3,7 @@ import asyncio
 from pydantic.dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional, Literal, Coroutine, Sequence
+from scraper.utils import text_processing
 
 
 def _limit_concurrency(
@@ -159,13 +160,13 @@ class Scraper(ABC):
             return DateTime.now()
 
     def _parse_title(self, title: str) -> str:
-        return title.strip()
+        return text_processing(title)
 
     def _parse_content(self, text: str) -> str:
         return text.strip()
 
     def _parse_author(self, author: str) -> str:
-        return author.strip()
+        return text_processing(author)
 
     def _parse_url(self, url: str) -> str:
         return url.strip()
