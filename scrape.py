@@ -1,10 +1,19 @@
 import os
 import hashlib
 import asyncio
+import time
 import pandas as pd
 import tempfile
 from tqdm.auto import tqdm
 from typing import Dict, TYPE_CHECKING
+import tenacity
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
+import requests
 from scraper.rthk_zh_telegram import RTHKChineseTelegramScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
 from scraper.hk01 import HK01Scraper
@@ -20,6 +29,35 @@ REPO_NAME = os.getenv("HF_REPO_NAME")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 api = HfApi(token=HF_TOKEN)
+
+
+def is_rate_limit_error(exception):
+    return (
+        isinstance(exception, requests.exceptions.HTTPError)
+        and exception.response.status_code == 429
+    )
+
+
+@retry(
+    retry=retry_if_exception_type((requests.exceptions.HTTPError, ConnectionError)),
+    stop=stop_after_attempt(7),  # Maximum 7 attempts
+    wait=wait_exponential(
+        multiplier=1, min=4, max=60
+    ),  # Start with 4s, double each time, max 60s
+    before_sleep=lambda retry_state: print(
+        f"Rate limited. Retry attempt {retry_state.attempt_number}. Waiting {retry_state.next_action.sleep} seconds..."
+    ),
+)
+def upload_to_hf(local_path, path_in_repo, repo_id, repo_type="dataset", wait_time=3):
+    # Add a wait time before each call, even on first attempt
+    time.sleep(wait_time)
+
+    return api.upload_file(
+        path_or_fileobj=local_path,
+        path_in_repo=path_in_repo,
+        repo_id=repo_id,
+        repo_type=repo_type,
+    )
 
 
 def main(num_proc=3):
@@ -51,11 +89,11 @@ def main(num_proc=3):
             df.to_csv(temp_file_path, index=False)
 
             # Upload the CSV file to Huggingface
-            api.upload_file(
-                path_or_fileobj=temp_file_path,
-                path_in_repo=f"articles/{key}/{article_id}.csv",
-                repo_id=REPO_NAME,
-                repo_type="dataset",
+            upload_to_hf(
+                temp_file_path,
+                f"articles/{key}/{article_id}.csv",
+                REPO_NAME,
+                "dataset",
             )
 
     temp_dir.cleanup()
