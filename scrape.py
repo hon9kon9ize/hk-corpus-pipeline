@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import tempfile
 from tqdm.auto import tqdm
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING, List
 import tenacity
 from tenacity import (
     retry,
@@ -23,6 +23,7 @@ from scraper.rthk_en import RTHKEnglishScraper
 from scraper.oncc import ONCCScraper
 from scraper.scmp import SCMPScraper
 from huggingface_hub import HfApi
+from datetime import datetime
 
 if TYPE_CHECKING:
     from scraper.scraper import Scraper
@@ -79,23 +80,40 @@ def main(num_proc=3):
         scraper = scrapers[key]
         articles = asyncio.run(scraper.get_articles())
 
-        for article in tqdm(articles, desc=f"Uploading {key}"):
-            # Convert article to a DataFrame
-            article_dict = article.to_dict()
-            df = pd.DataFrame([article_dict])
+        # Group articles by date
+        articles_by_date = {}
+        for article in articles:
+            # Extract date from article's publication date (assuming it has a published_at field)
+            # Adjust the date extraction based on your Article class structure
+            if hasattr(article, "published_at"):
+                date_str = article.published_at.split("T")[
+                    0
+                ]  # Extract YYYY-MM-DD from ISO format
+            else:
+                # Fallback to current date if no publication date available
+                date_str = datetime.now().strftime("%Y-%m-%d")
 
-            # md5 of the article id
-            article_id = hashlib.md5(article.id.encode()).hexdigest()
+            if date_str not in articles_by_date:
+                articles_by_date[date_str] = []
+
+            articles_by_date[date_str].append(article.to_dict())
+
+        # Upload articles grouped by date
+        for date_str, article_list in tqdm(
+            articles_by_date.items(), desc=f"Uploading {key} by date"
+        ):
+            # Convert list of articles to DataFrame
+            df = pd.DataFrame(article_list)
 
             # Save DataFrame to a temporary CSV file
-            temp_file_name = f"{article_id}.csv"
+            temp_file_name = f"{date_str}.csv"
             temp_file_path = os.path.join(temp_dir.name, temp_file_name)
             df.to_csv(temp_file_path, index=False)
 
             # Upload the CSV file to Huggingface
             upload_to_hf(
                 temp_file_path,
-                f"articles/{key}/{article_id}.csv",
+                f"articles/{key}/{date_str}.csv",
                 REPO_NAME,
                 "dataset",
             )
