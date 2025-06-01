@@ -108,7 +108,7 @@ def main(num_proc=3):
             df["source"] = key
 
             # Save DataFrame to a temporary CSV file
-            temp_file_name = f"{date_str}.csv"
+            temp_file_name = f"{key}_{date_str}.csv"
             temp_file_path = os.path.join(temp_dir.name, temp_file_name)
 
             df.to_csv(temp_file_path, index=False)

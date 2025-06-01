@@ -17,7 +17,7 @@ class APIScraper(Scraper):
         item_id_selector: str,
         item_title_selector: str,
         item_date_selector: str,
-        item_content_selector: Optional[str] = None,
+        item_content_selector: str,
         item_url_selector: Optional[str] = None,
         item_author_selector: Optional[str] = None,
         **kwargs,
