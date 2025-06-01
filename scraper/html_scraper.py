@@ -86,7 +86,6 @@ class HTMLScraper(Scraper):
         Returns:
             ScraperOutput: An object containing the parsed article details including id, title, content, author, date, and url.
         """
-
         id_value = self._get_elem_text(tag, self.item_id_selector)
         title_value = self._get_elem_text(tag, self.item_title_selector)
         content_value = (
@@ -94,12 +93,15 @@ class HTMLScraper(Scraper):
             if self.item_content_selector is not None
             else str(tag.html)
         )
+
         date_value = self._get_elem_text(tag, self.item_date_selector)
+
         author_value = (
             self._get_elem_text(tag, self.item_author_selector)
             if self.item_author_selector
             else None
         )
+
         url_value = (
             self._get_elem_text(tag, self.item_url_selector)
             if self.item_url_selector

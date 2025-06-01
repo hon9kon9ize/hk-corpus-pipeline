@@ -75,8 +75,7 @@ def main(num_proc=3):
         "SCMP": SCMPScraper(num_proc=num_proc),
         "GOVHK": GovHKScraper(num_proc=num_proc),
     }
-    # temp_dir = tempfile.TemporaryDirectory()
-    temp_dir = "tmp"
+    temp_dir = tempfile.TemporaryDirectory()
 
     for key in tqdm(scrapers.keys(), desc="Scraping"):
         scraper = scrapers[key]

@@ -18,12 +18,12 @@ class TelegramScraper(HTMLScraper):
         **kwargs
     ):
         super().__init__(
-            index_item_selector,
-            item_id_selector,
-            item_title_selector,
-            item_content_selector,
-            item_date_selector,
-            item_url_selector,
-            item_author_selector,
+            index_item_selector=index_item_selector,
+            item_id_selector=item_id_selector,
+            item_title_selector=item_title_selector,
+            item_date_selector=item_date_selector,
+            item_content_selector=item_content_selector,
+            item_url_selector=item_url_selector,
+            item_author_selector=item_author_selector,
             **kwargs,
         )
