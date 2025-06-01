@@ -12,7 +12,7 @@ class HK01Scraper(APIScraper):
             index_item_selector="items",
             item_id_selector="data.articleId",
             item_title_selector="data.title",
-            item_content_selector="data.description",  # html content
+            item_content_selector=None,  # html content
             item_date_selector="data.publishTime",
             item_url_selector="data.canonicalUrl",
             item_author_selector="data.authors.0.publishName",

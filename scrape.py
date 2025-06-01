@@ -1,18 +1,17 @@
 import os
-import hashlib
 import asyncio
 import time
 import pandas as pd
 import tempfile
 from tqdm.auto import tqdm
-from typing import Dict, TYPE_CHECKING, List
-import tenacity
+from typing import Dict, TYPE_CHECKING
 from tenacity import (
     retry,
     stop_after_attempt,
     wait_exponential,
     retry_if_exception_type,
 )
+from html_extractor.html_extractor import html_extract
 import requests
 from scraper.rthk_zh_telegram import RTHKChineseTelegramScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
@@ -22,6 +21,7 @@ from scraper.rthk_zh import RTHKChineseScraper
 from scraper.rthk_en import RTHKEnglishScraper
 from scraper.oncc import ONCCScraper
 from scraper.scmp import SCMPScraper
+from scraper.govhk import GovHKScraper
 from huggingface_hub import HfApi
 from datetime import datetime
 
@@ -73,8 +73,10 @@ def main(num_proc=3):
         "Headline": HeadlineScraper(num_proc=num_proc),
         "On.cc": ONCCScraper(num_proc=num_proc),
         "SCMP": SCMPScraper(num_proc=num_proc),
+        "GOVHK": GovHKScraper(num_proc=num_proc),
     }
-    temp_dir = tempfile.TemporaryDirectory()
+    # temp_dir = tempfile.TemporaryDirectory()
+    temp_dir = "tmp"
 
     for key in tqdm(scrapers.keys(), desc="Scraping"):
         scraper = scrapers[key]
@@ -108,6 +110,7 @@ def main(num_proc=3):
             # Save DataFrame to a temporary CSV file
             temp_file_name = f"{date_str}.csv"
             temp_file_path = os.path.join(temp_dir.name, temp_file_name)
+
             df.to_csv(temp_file_path, index=False)
 
             # Upload the CSV file to Huggingface

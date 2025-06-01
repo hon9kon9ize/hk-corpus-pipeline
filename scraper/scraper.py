@@ -46,6 +46,7 @@ class ScraperOutput:
             "id": self.id,
             "title": self.title,
             "category": self.category,
+            "content_type": self.content_type,
             "content": self.content,
             "author": self.author,
             "date": self.date,

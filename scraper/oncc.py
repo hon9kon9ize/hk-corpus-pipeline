@@ -17,7 +17,7 @@ class ONCCScraper(APIScraper):
             index_item_selector="items",
             item_id_selector="articleId",
             item_title_selector="title",
-            item_content_selector="description",  # html content
+            item_content_selector=None,  # html content
             item_date_selector="pubDate",
             item_url_selector="link",
             item_author_selector="authorname",
