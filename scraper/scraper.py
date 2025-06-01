@@ -1,5 +1,7 @@
 from datetime import datetime as DateTime
 import asyncio
+from zoneinfo import ZoneInfo
+import dateparser
 from pydantic.dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional, Literal, Coroutine, Sequence
@@ -156,9 +158,9 @@ class Scraper(ABC):
           datetime: The datetime object representing the date.
         """
         try:
-            return DateTime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            return DateTime.now()
+            return dateparser.parse(date, settings={"TIMEZONE": "Asia/Hong_Kong"})
+        except:
+            return DateTime.now(tz=ZoneInfo("Asia/Hong_Kong"))
 
     def _parse_title(self, title: str) -> str:
         return text_processing(title)

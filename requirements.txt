@@ -8,3 +8,4 @@ bs4
 huggingface_hub
 feedparser
 tenacity
+dateparser

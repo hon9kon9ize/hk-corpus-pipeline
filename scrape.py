@@ -106,6 +106,7 @@ def main(num_proc=3):
         ):
             # Convert list of articles to DataFrame
             df = pd.DataFrame(article_list)
+            df["source"] = key
 
             # Save DataFrame to a temporary CSV file
             temp_file_name = f"{date_str}.csv"
