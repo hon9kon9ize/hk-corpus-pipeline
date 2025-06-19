@@ -37,6 +37,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - 自由亞洲電台 (API) - https://www.rfa.org/cantonese/
 - TVB News (Web) - https://news.tvb.com/
 - Now 新聞 (Web) - https://news.now.com/
+- AM730 (API) - https://www.am730.com.hk/
 
 ### Media/Blogs
 
