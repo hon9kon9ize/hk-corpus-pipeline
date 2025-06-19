@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_header_location(
-    url: str, conn: Optional["Socks5Addr"] = None, timeout=10
+    url: str, conn: Optional["Socks5Addr"] = None, timeout=10, headers=None
 ) -> str:
     """
     Get the original url from shortened URL.
@@ -20,13 +20,15 @@ async def fetch_header_location(
       str: The header location of the URL.
     """
     async with aiohttp.ClientSession(connector=conn) as session:
-        async with session.head(url, allow_redirects=True, timeout=timeout) as response:
+        async with session.head(
+            url, allow_redirects=True, timeout=timeout, headers=headers
+        ) as response:
             return response.url
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
 async def fetch_content(
-    url: str, conn: Optional["Socks5Addr"] = None, timeout=10
+    url: str, conn: Optional["Socks5Addr"] = None, timeout=10, headers=None
 ) -> str:
     """
     Get the content of the URL.
@@ -38,12 +40,19 @@ async def fetch_content(
       str: The content of the URL.
     """
     async with aiohttp.ClientSession(connector=conn) as session:
-        async with session.get(url, timeout=timeout) as response:
+        async with session.get(url, timeout=timeout, headers=headers) as response:
             return await response.text()
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
-async def fetch_json(url: str, conn: Optional["Socks5Addr"] = None, timeout=10) -> dict:
+# @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+async def fetch_json(
+    url: str,
+    conn: Optional["Socks5Addr"] = None,
+    timeout=10,
+    method="GET",
+    headers=None,
+    body=None,
+) -> dict:
     """
     Get the JSON content of the URL.
 
@@ -54,7 +63,14 @@ async def fetch_json(url: str, conn: Optional["Socks5Addr"] = None, timeout=10) 
       dict: The JSON content of the URL.
     """
     async with aiohttp.ClientSession(connector=conn) as session:
-        async with session.get(url, timeout=timeout) as response:
+        headers = headers or {}
+        headers.setdefault("Content-Type", "application/json")
+        headers.setdefault("Accept", "application/json")
+        headers.setdefault("x-requested-with", "XMLHttpRequest")
+
+        async with session.request(
+            method, url, timeout=timeout, headers=headers, data=body
+        ) as response:
             return await response.json()
 
 

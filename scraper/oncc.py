@@ -29,7 +29,10 @@ class ONCCScraper(APIScraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
-            api_res_text = await fetch_content(self.index_url)
+            api_res_text = await fetch_content(
+                self.index_url,
+                headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            )
             # parse json
             api_res_json = json.loads(api_res_text.encode("utf-8").decode("utf-8-sig"))
 
@@ -40,7 +43,10 @@ class ONCCScraper(APIScraper):
 
     async def fetch_article(self, item: dict):
         # NOTE: Replace the content with the full article content
-        item["description"] = await fetch_content(self.base_url + item["link"])
+        item["description"] = await fetch_content(
+            self.base_url + item["link"],
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+        )
 
         return item
 

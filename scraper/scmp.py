@@ -31,7 +31,10 @@ class SCMPScraper(TelegramScraper):
             return None
 
         article_url = href_tag["href"]
-        content = await fetch_content(article_url)
+        content = await fetch_content(
+            article_url,
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+        )
         content_soup = BeautifulSoup(content, "html.parser")
 
         return content_soup

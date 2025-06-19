@@ -28,8 +28,9 @@ class RSSScraper(Scraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
-            d = feedparser.parse(self.index_url)
-
+            d = feedparser.parse(
+                self.index_url, agent=self.user_agent, referrer=self.index_url
+            )
             return d.entries
         except Exception as e:
             print("Error", e)
@@ -45,7 +46,10 @@ class RSSScraper(Scraper):
         Returns:
             Dict[str, Any]: The index item with the full article content.
         """
-        item["content"] = await fetch_content(item["link"])
+        item["content"] = await fetch_content(
+            item["link"],
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+        )
 
         return item
 

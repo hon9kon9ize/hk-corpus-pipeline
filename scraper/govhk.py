@@ -1,8 +1,5 @@
-from datetime import datetime as DateTime
 from typing import TYPE_CHECKING
-from bs4 import BeautifulSoup
 from scraper.rss_scraper import RSSScraper
-from scraper.utils import fetch_content
 import re
 
 if TYPE_CHECKING:

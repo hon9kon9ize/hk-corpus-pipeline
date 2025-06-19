@@ -1,20 +1,10 @@
 import os
 import asyncio
-import time
-import pandas as pd
-import tempfile
+import logging
+import datetime
 from tqdm.auto import tqdm
-from typing import Dict, TYPE_CHECKING
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-    retry_if_exception_type,
-)
-from html_extractor.html_extractor import html_extract
+from typing import Dict, TYPE_CHECKING, List
 import requests
-from scraper.rthk_zh_telegram import RTHKChineseTelegramScraper
-from scraper.inmediahknet import InMediaHKNetTelegramScraper
 from scraper.hk01 import HK01Scraper
 from scraper.stheadline import HeadlineScraper
 from scraper.rthk_zh import RTHKChineseScraper
@@ -22,16 +12,22 @@ from scraper.rthk_en import RTHKEnglishScraper
 from scraper.oncc import ONCCScraper
 from scraper.scmp import SCMPScraper
 from scraper.govhk import GovHKScraper
-from huggingface_hub import HfApi
-from datetime import datetime
+from scraper.c881903 import C881903Scraper
+from scraper.weekendhk import WeekendHKScraper
+from scraper.hket import HKETScraper
+from scraper.orangenews import OrangeNewsScraper
+from scraper.rfa import RFACantoneseScraper
+from scraper.tvbnews import TVBNewsScraper
+from scraper.nownews import NowNewsScraper
+from scraper.scraper import ScraperOutput
+from html_extractor.html_extractor import html_extract
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from scraper.scraper import Scraper
 
-REPO_NAME = os.getenv("HF_REPO_NAME")
-HF_TOKEN = os.getenv("HF_TOKEN")
-
-api = HfApi(token=HF_TOKEN)
+PIPELINE_ENDPOINT = os.getenv("PIPELINE_ENDPOINT")
 
 
 def is_rate_limit_error(exception):
@@ -41,32 +37,58 @@ def is_rate_limit_error(exception):
     )
 
 
-@retry(
-    retry=retry_if_exception_type((requests.exceptions.HTTPError, ConnectionError)),
-    stop=stop_after_attempt(7),  # Maximum 7 attempts
-    wait=wait_exponential(
-        multiplier=1, min=32, max=128
-    ),  # Start with 4s, double each time, max 60s
-    before_sleep=lambda retry_state: print(
-        f"Rate limited. Retry attempt {retry_state.attempt_number}. Waiting {retry_state.next_action.sleep} seconds..."
-    ),
-)
-def upload_to_hf(local_path, path_in_repo, repo_id, repo_type="dataset", wait_time=5):
-    # Add a wait time before each call, even on first attempt
-    time.sleep(wait_time)
+def send_to_pipeline(article, pipeline_endpoint=PIPELINE_ENDPOINT):
+    if not pipeline_endpoint:
+        raise ValueError("PIPELINE_ENDPOINT is not set.")
 
-    return api.upload_file(
-        path_or_fileobj=local_path,
-        path_in_repo=path_in_repo,
-        repo_id=repo_id,
-        repo_type=repo_type,
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(
+        pipeline_endpoint, json=article, headers=headers, timeout=60
     )
+
+    if response.status_code != 200:
+        raise requests.exceptions.HTTPError(
+            f"Pipeline request failed with status code {response.status_code}: {response.text}"
+        )
+
+    return response.json()
+
+
+def extract_content_from_html(articles: List[ScraperOutput]):
+    """
+    Extracts text content from HTML articles using the html_extract function.
+    """
+    extracted_articles = []
+
+    for index, article in enumerate(articles):
+        if isinstance(article.content, str):
+            prev_index = index - 1 if index > 0 else len(articles) - 1
+            ref_content = (
+                articles[prev_index].content
+                if isinstance(articles[prev_index].content, str)
+                else ""
+            )
+
+            if not ref_content:
+                logger.warning(
+                    f"No reference content found for the article at index {index}. Skipping HTML extraction."
+                )
+                continue
+
+            # Extract text from HTML content
+            extracted_article = article.to_dict().copy()
+            extracted_article["extracted"] = html_extract(ref_content, article.content)
+            extracted_article["date"] = (
+                article.date.isoformat() + "Z" if article.date else None
+            )
+            extracted_articles.append(extracted_article)
+
+    return extracted_articles
 
 
 def main(num_proc=3):
     scrapers: Dict[str, Scraper] = {
-        "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc),
-        "RTHKChineseTelegram": RTHKChineseTelegramScraper(num_proc=num_proc),
+        # "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc), # Cloudflare blocked
         "RTHKChinese": RTHKChineseScraper(num_proc=num_proc),
         "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
         "HK01": HK01Scraper(num_proc=num_proc),
@@ -74,54 +96,68 @@ def main(num_proc=3):
         "On.cc": ONCCScraper(num_proc=num_proc),
         "SCMP": SCMPScraper(num_proc=num_proc),
         "GOVHK": GovHKScraper(num_proc=num_proc),
+        "WeekendHK": WeekendHKScraper(num_proc=num_proc),
+        "881903": C881903Scraper(num_proc=num_proc),
+        "hket": HKETScraper(num_proc=num_proc),
+        "OrangeNews": OrangeNewsScraper(num_proc=num_proc),
+        "RFACantonese": RFACantoneseScraper(num_proc=num_proc),
+        "TVBNews": TVBNewsScraper(num_proc=num_proc),
+        "NowNews": NowNewsScraper(num_proc=num_proc),
     }
-    temp_dir = tempfile.TemporaryDirectory()
+    failed_scrapers = []
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = now.date()
+    timestamp = now.isoformat() + "Z"
 
     for key in tqdm(scrapers.keys(), desc="Scraping"):
         scraper = scrapers[key]
-        articles = asyncio.run(scraper.get_articles())
 
-        # Group articles by date
-        articles_by_date = {}
-        for article in articles:
-            # Extract date from article's publication date (assuming it has a published_at field)
-            # Adjust the date extraction based on your Article class structure
-            if hasattr(article, "published_at"):
-                date_str = article.published_at.split("T")[
-                    0
-                ]  # Extract YYYY-MM-DD from ISO format
-            else:
-                # Fallback to current date if no publication date available
-                date_str = datetime.now().strftime("%Y-%m-%d")
+        try:
+            articles = asyncio.run(scraper.get_articles())
 
-            if date_str not in articles_by_date:
-                articles_by_date[date_str] = []
+            if len(articles) == 0:
+                logger.error(f"No articles found for {key}. Skipping...")
+                failed_scrapers.append(key)
+                continue
 
-            articles_by_date[date_str].append(article.to_dict())
+            # extract article content from HTML
+            if scraper.content_type == "text/html":
+                articles = extract_content_from_html(articles)
 
-        # Upload articles grouped by date
-        for date_str, article_list in tqdm(
-            articles_by_date.items(), desc=f"Uploading {key} by date"
-        ):
-            # Convert list of articles to DataFrame
-            df = pd.DataFrame(article_list)
-            df["source"] = key
+            # send to Cloudflare pipeline
+            for article in articles:
+                # only get article published in today
+                if (
+                    article["date"]
+                    and datetime.datetime.fromisoformat(
+                        article["date"].replace("Z", "")
+                    ).date()
+                    != today
+                ):
+                    logger.warning(
+                        f"Article {article['title']} is not published today. Skipping..."
+                    )
+                    continue
 
-            # Save DataFrame to a temporary CSV file
-            temp_file_name = f"{key}_{date_str}.csv"
-            temp_file_path = os.path.join(temp_dir.name, temp_file_name)
+                send_to_pipeline(
+                    [
+                        {
+                            "event": "scraping",
+                            "scraper": key,
+                            "timestamp": timestamp,
+                            "payload": article,
+                        }
+                    ],
+                )
 
-            df.to_csv(temp_file_path, index=False)
+        except Exception as e:
+            logger.error(f"Error scraping {key}: {e}")
+            failed_scrapers.append(key)
 
-            # Upload the CSV file to Huggingface
-            upload_to_hf(
-                temp_file_path,
-                f"articles/{key}/{date_str}.csv",
-                REPO_NAME,
-                "dataset",
-            )
-
-    temp_dir.cleanup()
+    if failed_scrapers:
+        raise RuntimeError(
+            f"Failed to scrape the following scrapers: {', '.join(failed_scrapers)}"
+        )
 
 
 if __name__ == "__main__":

@@ -39,7 +39,10 @@ class HTMLScraper(Scraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
-            index_page = await fetch_content(self.index_url)
+            index_page = await fetch_content(
+                self.index_url,
+                headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            )
             index_soup = BeautifulSoup(index_page, "html.parser")
 
             items = index_soup.select(self.index_item_selector)

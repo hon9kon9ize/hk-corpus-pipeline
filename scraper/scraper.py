@@ -35,7 +35,9 @@ class ScraperOutput:
     title: str
     content: str
     content_type: Literal["text/html", "text/plain"]
-    category: Literal["news", "blog", "encyclopedia", "forum", "social_media"]
+    category: Literal[
+        "news", "blog", "encyclopedia", "forum", "social_media", "new_media"
+    ]
     author: Optional[str]
     date: Optional[DateTime]
     url: Optional[str]
@@ -70,12 +72,14 @@ class Scraper(ABC):
         content_type="text/html",
         num_proc=1,
         max_items: Optional[int] = None,
+        user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
     ):
         self.index_url = index_url
         self.category = category
         self.num_proc = num_proc
         self.max_items = max_items
         self.content_type = content_type
+        self.user_agent = user_agent
 
     def __repr__(self):
         return self.index_url

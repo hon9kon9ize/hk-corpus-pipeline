@@ -1,4 +1,4 @@
-# Hong Kong Web Corpus Pipeline
+# Hong Kong Web Archive Pipeline
 
 [![.github/workflows/scrape.yml](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml/badge.svg)](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml)
 
@@ -20,29 +20,28 @@ The data collected will be used to create a corpus of web text data. This corpus
 
 This is not a comprehensive list of data sources, and we are open to suggestions for other sources of Cantonese text data.
 
-### Encyclopedias
-
-- Yue Wikipedia - https://zh-yue.wikipedia.org/wiki/%E9%A0%AD%E7%89%88
-- English Wikipedia - https://en.wikipedia.org/wiki/Main_Page
-- Chinese Wikipedia - https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5
-- 香港網絡大典 - https://evchk.fandom.com/zh/wiki/%E9%A6%96%E9%A0%81
-
 ### News
 
-- RTHK News(Telegram) - https://t.me/s/rthk_new_c
+- 881903 (API) - https://www.881903.com/news2/recent
+- RTHK 新聞 (RSS) - https://news.rthk.hk/rthk/ch/
+- RTHK News English(RSS) - https://news.rthk.hk/rthk/en/
 - HK01 (API) - https://web-data.api.hk01.com/v2/feed/category/0?bucketId=00000
-- 獨立媒體 (Telegram) - https://t.me/s/inmediahknet
+- ~~獨立媒體 (Telegram) - https://t.me/s/inmediahknet~~ Cloudflare blocked
 - 星島頭條 (Web) - https://www.stheadline.com/
 - 政府新聞處 (Web) - https://www.info.gov.hk/gia/general/ctoday.htm
-- on.cc (API) - https://hk.on.cc/hk/bkn/js/20250205/news_dailyList.js
+- on.cc (API) - https://hk.on.cc
 - South China Morning Post (Telegram) - https://t.me/s/scmpfeed
 - 明報 (Web) - https://news.mingpao.com/
+- 香港經濟日報 (RSS) - https://www.hket.com/
+- 橙新聞 (API) - https://www.orangenews.hk/
+- 自由亞洲電台 (API) - https://www.rfa.org/cantonese/
+- TVB News (Web) - https://news.tvb.com/
+- Now 新聞 (Web) - https://news.now.com/
 
-### Blogs
+### Media/Blogs
 
-- 就係媒體 - https://beinghongkong.com/Blog
-- 新假期 - https://www.weekendhk.com/
-
+- 新假期 (RSS) - https://www.weekendhk.com/
+- unwire (RSS) - https://www.unwire.hk/
 
 ## How to Run
 

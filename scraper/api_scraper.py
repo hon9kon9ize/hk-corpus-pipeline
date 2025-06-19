@@ -1,5 +1,5 @@
 from scraper.utils import fetch_json
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union, Callable
 from scraper.scraper import Scraper, ScraperOutput
 
 if TYPE_CHECKING:
@@ -13,13 +13,16 @@ class APIScraper(Scraper):
 
     def __init__(
         self,
-        index_item_selector: str,
+        index_item_selector: Optional[str],
         item_id_selector: str,
         item_title_selector: str,
         item_date_selector: str,
         item_content_selector: str,
         item_url_selector: Optional[str] = None,
         item_author_selector: Optional[str] = None,
+        fetch_index_method="GET",
+        fetch_index_content_type="application/json",
+        fetch_index_body=None,
         **kwargs,
     ):
         self.index_item_selector = index_item_selector
@@ -29,6 +32,9 @@ class APIScraper(Scraper):
         self.item_content_selector = item_content_selector
         self.item_date_selector = item_date_selector
         self.item_author_selector = item_author_selector
+        self.fetch_index_method = fetch_index_method.upper()
+        self.fetch_index_content_type = fetch_index_content_type
+        self.fetch_index_body = fetch_index_body
 
         super().__init__(**kwargs)
 
@@ -37,7 +43,17 @@ class APIScraper(Scraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
-            api_res = await fetch_json(self.index_url)
+            api_res = await fetch_json(
+                self.index_url,
+                method=self.fetch_index_method,
+                headers={
+                    "User-Agent": self.user_agent,
+                    "Referer": self.index_url,
+                    "Content-Type": self.fetch_index_content_type,
+                },
+                body=self.fetch_index_body,
+            )
+
             list_items = (
                 self._get_value(api_res, self.index_item_selector)
                 if self.index_item_selector is not None
@@ -49,7 +65,14 @@ class APIScraper(Scraper):
             print("Error", e)
             return []
 
-    def _get_value(self, item: dict, selector: str) -> str:
+    def _get_value(self, item: dict, selector: Optional[Union[str, Callable]]) -> str:
+        if callable(selector):
+            # if selector is a callable, call it with the item
+            return selector(item)
+
+        if selector is None and isinstance(item, list):
+            return item
+
         # selector is dot annotated path to the value
         keys = selector.split(".")
         value = item

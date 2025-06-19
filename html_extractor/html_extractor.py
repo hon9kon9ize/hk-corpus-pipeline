@@ -39,6 +39,30 @@ def html_to_text(html_text: str) -> str:
     return text
 
 
+def remove_consecutive_duplicates(lines):
+    """
+    Remove consecutive duplicate lines from a list of strings.
+
+    This function iterates through a list of strings and removes
+    consecutive duplicates, returning a new list with unique entries.
+
+    Args:
+        lines: List of strings
+
+    Returns:
+        A list with consecutive duplicates removed
+    """
+    if not lines:
+        return []
+
+    unique_lines = [lines[0]]
+    for line in lines[1:]:
+        if line != unique_lines[-1]:
+            unique_lines.append(line)
+
+    return unique_lines
+
+
 def html_extract(ref_html, tgt_html):
     """
     Extract text differences between two HTML documents.
@@ -55,8 +79,8 @@ def html_extract(ref_html, tgt_html):
     Returns:
         A string containing the extracted text differences, joined by newlines
     """
-    ref_lines = ref_html.splitlines()
-    tgt_lines = tgt_html.splitlines()
+    ref_lines = load_and_clean_html(ref_html).splitlines()
+    tgt_lines = load_and_clean_html(tgt_html).splitlines()
     lines = []
     d = difflib.unified_diff(ref_lines, tgt_lines, lineterm="")
     for line in d:
@@ -65,5 +89,7 @@ def html_extract(ref_html, tgt_html):
 
             if len(text) > 0 and text not in lines:
                 lines.append(text.strip())
+
+    lines = remove_consecutive_duplicates(lines)
 
     return "\n".join(lines)

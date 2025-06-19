@@ -24,7 +24,10 @@ class HK01Scraper(APIScraper):
 
     async def fetch_article(self, item: dict):
         # NOTE: Replace the content with the full article content
-        item["data"]["description"] = await fetch_content(item["data"]["canonicalUrl"])
+        item["data"]["description"] = await fetch_content(
+            item["data"]["canonicalUrl"],
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+        )
 
         return item
 
