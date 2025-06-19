@@ -15,6 +15,5 @@ jobs:
       - name: Run Docker image
         run: |
           docker run --rm \
-            -e HF_TOKEN="${{ secrets.HF_TOKEN }}" \
-            -e HF_REPO_NAME="${{ vars.HF_REPO_NAME }}" \
+            -e PIPELINE_ENDPOINT="${{ secrets.PIPELINE_ENDPOINT }}" \
             scrape
