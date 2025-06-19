@@ -20,6 +20,8 @@ from scraper.orangenews import OrangeNewsScraper
 from scraper.rfa import RFACantoneseScraper
 from scraper.tvbnews import TVBNewsScraper
 from scraper.nownews import NowNewsScraper
+from scraper.unwire import UnwireScraper
+from scraper.mingpao import MingPaoScraper
 from scraper.scraper import ScraperOutput
 from html_extractor.html_extractor import html_extract
 
@@ -94,21 +96,23 @@ def extract_content_from_html(articles: List[ScraperOutput]):
 
 def main(num_proc=3):
     scrapers: Dict[str, Scraper] = {
-        # "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc), # Cloudflare blocked
+        "881903": C881903Scraper(num_proc=num_proc),
         "RTHKChinese": RTHKChineseScraper(num_proc=num_proc),
         "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
         "HK01": HK01Scraper(num_proc=num_proc),
+        # "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc), # Cloudflare blocked
         "Headline": HeadlineScraper(num_proc=num_proc),
+        "GOVHK": GovHKScraper(num_proc=num_proc),
         "On.cc": ONCCScraper(num_proc=num_proc),
         "SCMP": SCMPScraper(num_proc=num_proc),
-        "GOVHK": GovHKScraper(num_proc=num_proc),
-        "WeekendHK": WeekendHKScraper(num_proc=num_proc),
-        "881903": C881903Scraper(num_proc=num_proc),
+        "MingPao": MingPaoScraper(num_proc=num_proc),
         "hket": HKETScraper(num_proc=num_proc),
         "OrangeNews": OrangeNewsScraper(num_proc=num_proc),
         "RFACantonese": RFACantoneseScraper(num_proc=num_proc),
         "TVBNews": TVBNewsScraper(num_proc=num_proc),
         "NowNews": NowNewsScraper(num_proc=num_proc),
+        "WeekendHK": WeekendHKScraper(num_proc=num_proc),
+        "UnwireHK": UnwireScraper(num_proc=num_proc),
     }
     failed_scrapers = []
     now = datetime.datetime.now(datetime.timezone.utc)
