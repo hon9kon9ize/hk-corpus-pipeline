@@ -34,7 +34,9 @@ PIPELINE_ENDPOINT = os.getenv("PIPELINE_ENDPOINT")
 def is_dict_over_1mb(data: dict) -> bool:
     json_str = json.dumps(data)
     size_bytes = len(json_str.encode("utf-8"))
-    return size_bytes >= 1_048_576  # 1MB in bytes
+    return (
+        size_bytes > 990_000
+    )  # 0.99 MB threshold, there a limit of 1 MB for Cloudflare Workers
 
 
 def send_to_pipeline(article, pipeline_endpoint=PIPELINE_ENDPOINT):
