@@ -3,6 +3,7 @@ import asyncio
 import logging
 import datetime
 from tqdm.auto import tqdm
+import json
 from typing import Dict, TYPE_CHECKING, List
 import requests
 from scraper.hk01 import HK01Scraper
@@ -30,16 +31,19 @@ if TYPE_CHECKING:
 PIPELINE_ENDPOINT = os.getenv("PIPELINE_ENDPOINT")
 
 
-def is_rate_limit_error(exception):
-    return (
-        isinstance(exception, requests.exceptions.HTTPError)
-        and exception.response.status_code == 429
-    )
+def is_dict_over_1mb(data: dict) -> bool:
+    json_str = json.dumps(data)
+    size_bytes = len(json_str.encode("utf-8"))
+    return size_bytes >= 1_048_576  # 1MB in bytes
 
 
 def send_to_pipeline(article, pipeline_endpoint=PIPELINE_ENDPOINT):
     if not pipeline_endpoint:
         raise ValueError("PIPELINE_ENDPOINT is not set.")
+
+    if is_dict_over_1mb(article):
+        logger.warning("Article size exceeds 1MB, skipping sending to pipeline.")
+        return
 
     headers = {"Content-Type": "application/json"}
     response = requests.post(
