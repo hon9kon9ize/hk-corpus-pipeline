@@ -118,7 +118,11 @@ class HTMLScraper(Scraper):
         title = self._parse_title(title_value)
         content = self._parse_content(content_value)
         date = self._parse_date(date_value)
-        author = self._parse_author(author_value) if self.item_author_selector else None
+        author = (
+            self._parse_author(author_value)
+            if self.item_author_selector and author_value is not None
+            else None
+        )
         url = self._parse_url(url_value) if self.item_url_selector else None
 
         return ScraperOutput(

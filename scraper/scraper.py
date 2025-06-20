@@ -144,7 +144,7 @@ class Scraper(ABC):
                     article = self.parse_article(item)
                     articles.append(article)
                 except Exception as e:
-                    print(f"Error parsing article {item}: {e}")
+                    print(f"Error parsing article: {e}")
 
         return articles
 

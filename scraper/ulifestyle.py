@@ -53,7 +53,7 @@ class ULifestyleScraper(HTMLScraper):
 if __name__ == "__main__":
     import asyncio
 
-    scraper = ULifestyleScraper(max_items=2)
+    scraper = ULifestyleScraper()
 
     articles = asyncio.run(scraper.get_articles())
 
