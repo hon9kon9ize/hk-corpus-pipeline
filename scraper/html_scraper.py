@@ -67,7 +67,7 @@ class HTMLScraper(Scraper):
             selector = selector.replace(f"[{attr_name}]", "")
             elem_tag = tag.select_one(selector)
 
-            if elem_tag is None:
+            if elem_tag is None or attr_name not in elem_tag.attrs:
                 return None
 
             return elem_tag[attr_name]
