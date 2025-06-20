@@ -136,12 +136,15 @@ class Scraper(ABC):
         )
 
         # postprocess the article items
-        articles = [
-            self.parse_article(item) for item in article_items if item is not None
-        ]
+        articles = []
 
-        # filter out None values
-        articles = [article for article in articles if article is not None]
+        for item in article_items:
+            if item is not None:
+                try:
+                    article = self.parse_article(item)
+                    articles.append(article)
+                except Exception as e:
+                    print(f"Error parsing article {item}: {e}")
 
         return articles
 
