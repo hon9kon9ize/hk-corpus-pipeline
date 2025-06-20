@@ -43,6 +43,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 
 - 新假期 (RSS) - https://www.weekendhk.com/
 - unwire (RSS) - https://www.unwire.hk/
+- ULifestyle (API) - https://www.ulifestyle.com.hk/
 
 ## How to Run
 
