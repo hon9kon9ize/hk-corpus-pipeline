@@ -28,8 +28,6 @@ class ULifestyleScraper(HTMLScraper):
         # get html content in .tgme_widget_message_text
         href_tag = tag.select_one(".card > .card-body .card-title > a")
 
-        print(href_tag)
-
         if href_tag is None:
             return None
 
