@@ -26,7 +26,7 @@ class MingPaoScraper(HTMLScraper):
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
         # get html content in .tgme_widget_message_text
-        href_tag = tag.select_one("figure a[href]")
+        href_tag = tag.select("h2 > a[href]")[1]
 
         if href_tag is None:
             return None
