@@ -43,7 +43,6 @@ class MingPaoScraper(HTMLScraper):
             article_url,
             headers={"User-Agent": self.user_agent, "Referer": self.index_url},
         )
-        print(content)
         content_soup = BeautifulSoup(content, "html.parser")
 
         return content_soup
