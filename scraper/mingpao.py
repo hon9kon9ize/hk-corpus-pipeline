@@ -64,7 +64,7 @@ class MingPaoScraper(HTMLScraper):
 if __name__ == "__main__":
     import asyncio
 
-    scraper = MingPaoScraper(max_items=1)
+    scraper = MingPaoScraper()
 
     articles = asyncio.run(scraper.get_articles())
 

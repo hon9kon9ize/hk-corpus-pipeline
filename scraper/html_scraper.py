@@ -62,6 +62,8 @@ class HTMLScraper(Scraper):
                 attr_name = ""
 
             if selector.startswith("&"):  # the attribute is at top level
+                if attr_name not in tag.attrs:
+                    return None
                 return tag[attr_name]
 
             selector = selector.replace(f"[{attr_name}]", "")
