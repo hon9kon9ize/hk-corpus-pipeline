@@ -71,7 +71,7 @@ def extract_content_from_html(articles: List[ScraperOutput]):
     extracted_articles = []
 
     for index, article in enumerate(articles):
-        if isinstance(article.content, str):
+        if article is not None and isinstance(article.content, str):
             prev_index = index - 1 if index > 0 else len(articles) - 1
             prev_article = articles[prev_index]
 
