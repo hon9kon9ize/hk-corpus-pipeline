@@ -73,10 +73,16 @@ def extract_content_from_html(articles: List[ScraperOutput]):
     for index, article in enumerate(articles):
         if isinstance(article.content, str):
             prev_index = index - 1 if index > 0 else len(articles) - 1
+            prev_article = articles[prev_index]
+
+            if prev_article is None:
+                logger.warning(
+                    f"No previous article found for index {index}. Skipping HTML extraction."
+                )
+                continue
+
             ref_content = (
-                articles[prev_index].content
-                if isinstance(articles[prev_index].content, str)
-                else ""
+                prev_article.content if isinstance(prev_article.content, str) else ""
             )
 
             if not ref_content:
