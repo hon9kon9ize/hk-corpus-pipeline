@@ -52,7 +52,6 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 
 Fork this repository and add these secrets or environment variables to your repository:
 
-- `HF_TOKEN` - Hugging Face API token
-- `HF_REPO_NAME` - Name of the repository to push the dataset to (e.g. `hon9kon9ize/yue-corpus`)
+- `PIPELINE_ENDPOINT` - Cloudflare pipeline endpoint
 
-Then Github workflows will automatically run the pipeline and push the dataset to your repository.
+Then Github workflows will automatically run the pipeline and sending the data the Cloudflare R2 object storage as a sink.
