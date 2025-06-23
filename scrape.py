@@ -24,6 +24,7 @@ from scraper.unwire import UnwireScraper
 from scraper.mingpao import MingPaoScraper
 from scraper.am730 import AM730Scraper
 from scraper.ulifestyle import ULifestyleScraper
+from scraper.thestandard import TheStandardScraper
 from scraper.scraper import ScraperOutput
 from html_extractor.html_extractor import html_extract
 
@@ -123,6 +124,7 @@ def main(num_proc=3):
         "UnwireHK": UnwireScraper(num_proc=num_proc),
         "AM730": AM730Scraper(num_proc=num_proc),
         "ULifestyleScraper": ULifestyleScraper(num_proc=num_proc),
+        "TheStandard": TheStandardScraper(num_proc=num_proc),
     }
     failed_scrapers = []
     now = datetime.datetime.now(datetime.timezone.utc)

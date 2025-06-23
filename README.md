@@ -38,12 +38,15 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - TVB News (Web) - https://news.tvb.com/
 - Now 新聞 (Web) - https://news.now.com/
 - AM730 (API) - https://www.am730.com.hk/
+- The Standard (Web) - https://www.thestandard.com.hk/
 
-### Media/Blogs
+### New Media/Blogs
 
 - 新假期 (RSS) - https://www.weekendhk.com/
 - unwire (RSS) - https://www.unwire.hk/
 - ULifestyle (API) - https://www.ulifestyle.com.hk/
+- Fortune Insight (API) - https://fortuneinsight.com/
+- 堅料網 (RSS) - https://n.kinliu.hk/
 
 ## How to Run
 

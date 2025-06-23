@@ -3,27 +3,24 @@ from scraper.utils import fetch_content
 from scraper.api_scraper import APIScraper
 
 
-class NowNewsScraper(APIScraper):
+class TheStandardScraper(APIScraper):
     def __init__(self, **kwargs):
         super().__init__(
-            index_url="https://d3sli7vh0lsda4.cloudfront.net/api/getNewsList?category=119&pageNo=1&pageSize=20",
+            index_url="https://www.thestandard.com.hk/api/content?path=%2Fapi%2Fv1%2Fcat%2Fnews%2Farticle%3Fcursor%3DeyJ2YWx1ZSI6NDAsImZ1bGxMaXN0SWQiOiI3MDQzNmNhZmIyMDM1ZWFlZGNkZjZiZTg1ZTcyMjIyMiJ9",
             category="news",
             content_type="text/html",
-            index_item_selector="&",  # root level
-            item_id_selector="newsId",
+            index_item_selector="data",
+            item_id_selector="article_id",
             item_title_selector="title",
             item_content_selector="content",  # html content
-            item_date_selector="publishDate",  # 1750321286000
+            item_date_selector="publish_at",  # 1750663140
             item_url_selector=self.get_article_url,
             item_author_selector=None,
             **kwargs,
         )
 
     def get_article_url(self, item: dict) -> str:
-        return f"https://news.now.com/home/local/player?newsId={item['newsId']}"
-
-    def _parse_date(self, date):
-        return DateTime.fromtimestamp(date / 1000) if date else DateTime.now()
+        return f"https://www.thestandard.com.hk/{item['url']}"
 
     async def fetch_article(self, item: dict):
         article_url = self.get_article_url(item)
@@ -41,7 +38,7 @@ if __name__ == "__main__":
     import asyncio
 
     # Example usage
-    scraper = NowNewsScraper(
+    scraper = TheStandardScraper(
         num_proc=1,
     )
 

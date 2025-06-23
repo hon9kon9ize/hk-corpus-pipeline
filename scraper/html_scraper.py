@@ -43,6 +43,14 @@ class HTMLScraper(Scraper):
                 self.index_url,
                 headers={"User-Agent": self.user_agent, "Referer": self.index_url},
             )
+
+            if callable(self.index_item_selector):
+                # if the index_item_selector is a callable, call it with the index page content
+                items = self.index_item_selector(index_page)
+                if not isinstance(items, list):
+                    raise ValueError("index_item_selector must return a list of items")
+                return items
+
             index_soup = BeautifulSoup(index_page, "html.parser")
 
             items = index_soup.select(self.index_item_selector)
@@ -53,6 +61,10 @@ class HTMLScraper(Scraper):
             return []
 
     def _get_elem_text(self, tag: "ResultSet[Tag]", selector: str) -> str:
+        if callable(selector):
+            # if the selector is a callable, call it with the tag
+            return selector(tag)
+
         # if the selector has an attribute, e.g. "a[href]", return the attribute value
         if selector.endswith("]"):
             attr_name_match = re.match(r"^.+(\[[^=]+\])$", selector)
@@ -65,7 +77,6 @@ class HTMLScraper(Scraper):
                 if attr_name not in tag.attrs:
                     return None
                 return tag[attr_name]
-
             selector = selector.replace(f"[{attr_name}]", "")
             elem_tag = tag.select_one(selector)
 

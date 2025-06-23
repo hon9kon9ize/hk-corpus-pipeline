@@ -65,12 +65,13 @@ class APIScraper(Scraper):
             print("Error", e)
             return []
 
-    def _get_value(self, item: dict, selector: Optional[Union[str, Callable]]) -> str:
+    def _get_value(self, item: dict, selector: Union[str, Callable]):
         if callable(selector):
             # if selector is a callable, call it with the item
             return selector(item)
 
-        if selector is None and isinstance(item, list):
+        if selector == "&" and isinstance(item, list):
+            # return root array if selector is "&"
             return item
 
         # selector is dot annotated path to the value
