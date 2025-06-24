@@ -21,7 +21,7 @@ class AM730Scraper(APIScraper):
         )
 
     def get_article_url(self, item: dict) -> str:
-        return f"https://www.am730.com.hk/{item['url']}"
+        return f"https://www.am730.com.hk{item['url']}"
 
     async def fetch_article(self, item: dict):
         article_url = self.get_article_url(item)

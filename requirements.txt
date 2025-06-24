@@ -9,3 +9,5 @@ huggingface_hub
 feedparser
 tenacity
 dateparser
+duckedb
+dotenv

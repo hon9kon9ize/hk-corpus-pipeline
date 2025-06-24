@@ -10,7 +10,7 @@ class C881903Scraper(APIScraper):
             category="news",
             content_type="text/html",
             index_item_selector="response.content",
-            item_id_selector="content_id",
+            item_id_selector="item_id",
             item_title_selector="title",
             item_content_selector="content",  # html content
             item_date_selector="display_date",  # 2025-06-18
