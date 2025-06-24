@@ -6,32 +6,13 @@ from tqdm.auto import tqdm
 import json
 from typing import Dict, TYPE_CHECKING, List
 import requests
-from scraper.hk01 import HK01Scraper
-from scraper.stheadline import HeadlineScraper
-from scraper.rthk_zh import RTHKChineseScraper
-from scraper.rthk_en import RTHKEnglishScraper
-from scraper.oncc import ONCCScraper
-from scraper.scmp import SCMPScraper
-from scraper.govhk import GovHKScraper
-from scraper.c881903 import C881903Scraper
-from scraper.weekendhk import WeekendHKScraper
-from scraper.hket import HKETScraper
-from scraper.orangenews import OrangeNewsScraper
-from scraper.rfa import RFACantoneseScraper
-from scraper.tvbnews import TVBNewsScraper
-from scraper.nownews import NowNewsScraper
-from scraper.unwire import UnwireScraper
-from scraper.mingpao import MingPaoScraper
-from scraper.am730 import AM730Scraper
-from scraper.ulifestyle import ULifestyleScraper
-from scraper.thestandard import TheStandardScraper
-from scraper.scraper import ScraperOutput
+from scraper import *
 from html_extractor.html_extractor import html_extract
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from scraper.scraper import Scraper
+    from scraper.scraper import ScraperOutput, Scraper
 
 PIPELINE_ENDPOINT = os.getenv("PIPELINE_ENDPOINT")
 
@@ -65,7 +46,7 @@ def send_to_pipeline(article, pipeline_endpoint=PIPELINE_ENDPOINT):
     return response.json()
 
 
-def extract_content_from_html(articles: List[ScraperOutput]):
+def extract_content_from_html(articles: List["ScraperOutput"]):
     """
     Extracts text content from HTML articles using the html_extract function.
     """
@@ -125,6 +106,7 @@ def main(num_proc=3):
         "AM730": AM730Scraper(num_proc=num_proc),
         "ULifestyleScraper": ULifestyleScraper(num_proc=num_proc),
         "TheStandard": TheStandardScraper(num_proc=num_proc),
+        "EdigestHK": EdigestHKScraper(num_proc=num_proc),
     }
     failed_scrapers = []
     now = datetime.datetime.now(datetime.timezone.utc)

@@ -47,6 +47,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - ULifestyle (API) - https://www.ulifestyle.com.hk/
 - Fortune Insight (API) - https://fortuneinsight.com/
 - 堅料網 (RSS) - https://n.kinliu.hk/
+- 經濟一週 (RSS) - https://www.edigest.hk/
 
 ## How to Run
 
