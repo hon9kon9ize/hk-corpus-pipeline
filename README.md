@@ -49,6 +49,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - 堅料網 (RSS) - https://n.kinliu.hk/
 - 經濟一週 (RSS) - https://www.edigest.hk/
 - MenClub (RSS) - https://www.menclub.hk/
+- 點新聞 (HTML) - https://www.dotdotnews.com/
 
 ## How to Run
 

@@ -18,7 +18,7 @@ class HTMLScraper(Scraper):
         index_item_selector: str,
         item_id_selector: str,
         item_title_selector: str,
-        item_date_selector: str,
+        item_date_selector: Optional[str] = None,
         item_content_selector: Optional[str] = None,
         item_url_selector: Optional[str] = None,
         item_author_selector: Optional[str] = None,
@@ -39,19 +39,19 @@ class HTMLScraper(Scraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
-            index_page = await fetch_content(
+            index_page_html = await fetch_content(
                 self.index_url,
                 headers={"User-Agent": self.user_agent, "Referer": self.index_url},
             )
 
             if callable(self.index_item_selector):
                 # if the index_item_selector is a callable, call it with the index page content
-                items = self.index_item_selector(index_page)
+                items = self.index_item_selector(index_page_html)
                 if not isinstance(items, list):
                     raise ValueError("index_item_selector must return a list of items")
                 return items
 
-            index_soup = BeautifulSoup(index_page, "html.parser")
+            index_soup = BeautifulSoup(index_page_html, "html.parser")
 
             items = index_soup.select(self.index_item_selector)
 
@@ -110,7 +110,11 @@ class HTMLScraper(Scraper):
             else str(tag.html)
         )
 
-        date_value = self._get_elem_text(tag, self.item_date_selector)
+        date_value = (
+            self._get_elem_text(tag, self.item_date_selector)
+            if self.item_date_selector
+            else None
+        )
 
         author_value = (
             self._get_elem_text(tag, self.item_author_selector)
