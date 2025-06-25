@@ -51,6 +51,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - RTHK 新聞 (RSS) - https://news.rthk.hk/rthk/ch/
 - RTHK News English(RSS) - https://news.rthk.hk/rthk/en/
 - 新城電台 (Web) - https://www.metroradio.com.hk/
+- 東方新地 (RSS) - https://www.orientalsunday.hk/
 
 ## How to Run
 

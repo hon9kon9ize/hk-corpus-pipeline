@@ -25,3 +25,4 @@ from scraper.thestandard import TheStandardScraper
 from scraper.menclub import MenClubScraper
 from scraper.inmediahknet import InMediaHKNetTelegramScraper
 from scraper.metroradio import MetroRadioScraper
+from scraper.orientalsunday import OrientalSundayScraper
