@@ -22,9 +22,6 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 
 ### News
 
-- 881903 (API) - https://www.881903.com/news2/recent
-- RTHK 新聞 (RSS) - https://news.rthk.hk/rthk/ch/
-- RTHK News English(RSS) - https://news.rthk.hk/rthk/en/
 - HK01 (API) - https://web-data.api.hk01.com/v2/feed/category/0?bucketId=00000
 - ~~獨立媒體 (Telegram) - https://t.me/s/inmediahknet~~ Cloudflare blocked
 - 星島頭條 (Web) - https://www.stheadline.com/
@@ -40,7 +37,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - AM730 (API) - https://www.am730.com.hk/
 - The Standard (Web) - https://www.thestandard.com.hk/
 
-### New Media/Blogs
+### New Media/Blogs/Radio/Social Media
 
 - 新假期 (RSS) - https://www.weekendhk.com/
 - unwire (RSS) - https://www.unwire.hk/
@@ -50,6 +47,10 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - 經濟一週 (RSS) - https://www.edigest.hk/
 - MenClub (RSS) - https://www.menclub.hk/
 - 點新聞 (HTML) - https://www.dotdotnews.com/
+- 881903 (API) - https://www.881903.com/news2/recent
+- RTHK 新聞 (RSS) - https://news.rthk.hk/rthk/ch/
+- RTHK News English(RSS) - https://news.rthk.hk/rthk/en/
+- 新城電台 (Web) - https://www.metroradio.com.hk/
 
 ## How to Run
 

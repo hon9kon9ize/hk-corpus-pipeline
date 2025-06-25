@@ -23,3 +23,5 @@ from scraper.edigesthk import EdigestHKScraper
 from scraper.ulifestyle import ULifestyleScraper
 from scraper.thestandard import TheStandardScraper
 from scraper.menclub import MenClubScraper
+from scraper.inmediahknet import InMediaHKNetTelegramScraper
+from scraper.metroradio import MetroRadioScraper

@@ -108,6 +108,7 @@ def main(num_proc=3):
         "TheStandard": TheStandardScraper(num_proc=num_proc),
         "EdigestHK": EdigestHKScraper(num_proc=num_proc),
         "MenClub": MenClubScraper(num_proc=num_proc),
+        "MetroRadio": MetroRadioScraper(num_proc=num_proc),
     }
     failed_scrapers = []
     now = datetime.datetime.now(datetime.timezone.utc)
