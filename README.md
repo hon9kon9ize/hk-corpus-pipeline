@@ -48,6 +48,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - Fortune Insight (API) - https://fortuneinsight.com/
 - 堅料網 (RSS) - https://n.kinliu.hk/
 - 經濟一週 (RSS) - https://www.edigest.hk/
+- MenClub (RSS) - https://www.menclub.hk/
 
 ## How to Run
 

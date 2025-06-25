@@ -1,3 +1,7 @@
+from scraper.scraper import ScraperOutput
+from scraper.html_scraper import HTMLScraper
+from scraper.rss_scraper import RSSScraper
+from scraper.api_scraper import APIScraper
 from scraper.hk01 import HK01Scraper
 from scraper.stheadline import HeadlineScraper
 from scraper.rthk_zh import RTHKChineseScraper
@@ -18,7 +22,4 @@ from scraper.am730 import AM730Scraper
 from scraper.edigesthk import EdigestHKScraper
 from scraper.ulifestyle import ULifestyleScraper
 from scraper.thestandard import TheStandardScraper
-from scraper.scraper import ScraperOutput
-from scraper.html_scraper import HTMLScraper
-from scraper.rss_scraper import RSSScraper
-from scraper.api_scraper import APIScraper
+from scraper.menclub import MenClubScraper

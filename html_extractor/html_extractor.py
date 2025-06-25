@@ -1,4 +1,5 @@
 import difflib
+import html
 from bs4 import BeautifulSoup
 
 
@@ -36,6 +37,7 @@ def html_to_text(html_text: str) -> str:
     """
     soup = BeautifulSoup(html_text, "html.parser")
     text = soup.get_text(separator="\n", strip=True)
+    text = html.unescape(text)  # Decode HTML entities
     return text
 
 

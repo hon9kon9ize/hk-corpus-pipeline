@@ -11,3 +11,5 @@ tenacity
 dateparser
 duckedb
 dotenv
+pydips
+networkx
