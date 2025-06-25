@@ -9,7 +9,7 @@ huggingface_hub
 feedparser
 tenacity
 dateparser
-duckedb
+duckdb
 dotenv
 pydips
 networkx
