@@ -28,7 +28,7 @@ class MenClubScraper(RSSScraper):
             if match:
                 date_str = match.group(1)
                 try:
-                    article.date = datetime.strptime(date_str, "%d %b %Y").isoformat()
+                    article.date = datetime.strptime(date_str, "%d %b %Y")
                 except ValueError:
                     pass
 
@@ -38,7 +38,7 @@ class MenClubScraper(RSSScraper):
 if __name__ == "__main__":
     import asyncio
 
-    scraper = MenClubScraper(num_proc=3)
+    scraper = MenClubScraper()
     articles = asyncio.run(scraper.get_articles())
 
     print(articles)

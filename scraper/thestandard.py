@@ -1,4 +1,5 @@
 from datetime import datetime as DateTime
+import re
 from scraper.utils import fetch_content
 from scraper.api_scraper import APIScraper
 
@@ -6,7 +7,7 @@ from scraper.api_scraper import APIScraper
 class TheStandardScraper(APIScraper):
     def __init__(self, **kwargs):
         super().__init__(
-            index_url="https://www.thestandard.com.hk/api/content?path=%2Fapi%2Fv1%2Fcat%2Fnews%2Farticle%3Fcursor%3DeyJ2YWx1ZSI6NDAsImZ1bGxMaXN0SWQiOiI3MDQzNmNhZmIyMDM1ZWFlZGNkZjZiZTg1ZTcyMjIyMiJ9",
+            index_url="https://www.thestandard.com.hk/api/content?path=%2Fapi%2Fv1%2Fcat%2Fnews%2Farticle%3Fcursor%3D{cursor}",
             category="news",
             content_type="text/html",
             index_item_selector="data",
@@ -18,6 +19,19 @@ class TheStandardScraper(APIScraper):
             item_author_selector=None,
             **kwargs,
         )
+
+    async def parse_index(self):
+        raw_html = await fetch_content(
+            "https://www.thestandard.com.hk/news",
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+        )
+        # find the cursor from the raw HTML, example: cursor=eyJ2YWx1ZSI6MjAsImZ1bGxMaXN0SWQiOiI5OTRjZTkzN2RmNWMyMTBmZWFkMGYwNWJhNDVjNWU1YiJ9
+        cursor_match = re.search(r'cursor=([^"]+)\\"', raw_html)
+        if cursor_match:
+            cursor = cursor_match.group(1)
+            self.index_url = self.index_url.format(cursor=cursor)
+
+        return await super().parse_index()
 
     def get_article_url(self, item: dict) -> str:
         return f"https://www.thestandard.com.hk/{item['url']}"
@@ -38,9 +52,7 @@ if __name__ == "__main__":
     import asyncio
 
     # Example usage
-    scraper = TheStandardScraper(
-        num_proc=1,
-    )
+    scraper = TheStandardScraper()
 
     articles = asyncio.run(scraper.get_articles())
 

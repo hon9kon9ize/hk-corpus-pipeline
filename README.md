@@ -37,7 +37,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - AM730 (API) - https://www.am730.com.hk/
 - The Standard (Web) - https://www.thestandard.com.hk/
 
-### New Media/Blogs/Radio/Social Media
+### New Media / Blogs / Radio / Social Media
 
 - 新假期 (RSS) - https://www.weekendhk.com/
 - unwire (RSS) - https://www.unwire.hk/
