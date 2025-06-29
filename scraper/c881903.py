@@ -20,7 +20,7 @@ class C881903Scraper(APIScraper):
         )
 
     def get_article_url(self, item: dict) -> str:
-        return f"https://www.881903.com/news/{item['article_column']['uri_code']}/{item['content_id']}"
+        return f"https://www.881903.com/news/{item['article_column']['uri_code']}/{item['item_id']}"
 
     def _parse_date(self, date):
         return DateTime.strptime(date, "%Y-%m-%d") if date else DateTime.now()
@@ -43,6 +43,7 @@ if __name__ == "__main__":
     # Example usage
     scraper = C881903Scraper(
         num_proc=1,
+        max_items=1,  # Limit to 1 item for testing
     )
 
     articles = asyncio.run(scraper.get_articles())

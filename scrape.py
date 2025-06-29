@@ -73,6 +73,12 @@ def extract_content_from_html(articles: List["ScraperOutput"]):
                 )
                 continue
 
+            print(
+                len(ref_content),
+                len(article.content),
+                len(html_extract(ref_content, article.content)),
+            )
+
             # Extract text from HTML content
             extracted_article = article.to_dict().copy()
             extracted_article["extracted"] = html_extract(ref_content, article.content)
@@ -87,28 +93,28 @@ def extract_content_from_html(articles: List["ScraperOutput"]):
 def main(num_proc=3):
     scrapers: Dict[str, Scraper] = {
         "881903": C881903Scraper(num_proc=num_proc),
-        "RTHKChinese": RTHKChineseScraper(num_proc=num_proc),
-        "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
-        "HK01": HK01Scraper(num_proc=num_proc),
-        # "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc), # Cloudflare blocked
-        "Headline": HeadlineScraper(num_proc=num_proc),
-        "GOVHK": GovHKScraper(num_proc=num_proc),
-        "On.cc": ONCCScraper(num_proc=num_proc),
-        "SCMP": SCMPScraper(num_proc=num_proc),
-        "MingPao": MingPaoScraper(num_proc=num_proc),
-        "hket": HKETScraper(num_proc=num_proc),
-        "OrangeNews": OrangeNewsScraper(num_proc=num_proc),
-        "RFACantonese": RFACantoneseScraper(num_proc=num_proc),
-        "TVBNews": TVBNewsScraper(num_proc=num_proc),
-        "NowNews": NowNewsScraper(num_proc=num_proc),
-        "WeekendHK": WeekendHKScraper(num_proc=num_proc),
-        "UnwireHK": UnwireScraper(num_proc=num_proc),
-        "AM730": AM730Scraper(num_proc=num_proc),
-        "ULifestyleScraper": ULifestyleScraper(num_proc=num_proc),
-        "TheStandard": TheStandardScraper(num_proc=num_proc),
-        "EdigestHK": EdigestHKScraper(num_proc=num_proc),
-        "MenClub": MenClubScraper(num_proc=num_proc),
-        "MetroRadio": MetroRadioScraper(num_proc=num_proc),
+        # "RTHKChinese": RTHKChineseScraper(num_proc=num_proc),
+        # "RTHKEnglish": RTHKEnglishScraper(num_proc=num_proc),
+        # "HK01": HK01Scraper(num_proc=num_proc),
+        # # "InMediaHKNet": InMediaHKNetTelegramScraper(num_proc=num_proc), # Cloudflare blocked
+        # "Headline": HeadlineScraper(num_proc=num_proc),
+        # "GOVHK": GovHKScraper(num_proc=num_proc),
+        # "On.cc": ONCCScraper(num_proc=num_proc),
+        # "SCMP": SCMPScraper(num_proc=num_proc),
+        # "MingPao": MingPaoScraper(num_proc=num_proc),
+        # "hket": HKETScraper(num_proc=num_proc),
+        # "OrangeNews": OrangeNewsScraper(num_proc=num_proc),
+        # "RFACantonese": RFACantoneseScraper(num_proc=num_proc),
+        # "TVBNews": TVBNewsScraper(num_proc=num_proc),
+        # "NowNews": NowNewsScraper(num_proc=num_proc),
+        # "WeekendHK": WeekendHKScraper(num_proc=num_proc),
+        # "UnwireHK": UnwireScraper(num_proc=num_proc),
+        # "AM730": AM730Scraper(num_proc=num_proc),
+        # "ULifestyleScraper": ULifestyleScraper(num_proc=num_proc),
+        # "TheStandard": TheStandardScraper(num_proc=num_proc),
+        # "EdigestHK": EdigestHKScraper(num_proc=num_proc),
+        # "MenClub": MenClubScraper(num_proc=num_proc),
+        # "MetroRadio": MetroRadioScraper(num_proc=num_proc),
     }
     failed_scrapers = []
     now = datetime.datetime.now(datetime.timezone.utc)
