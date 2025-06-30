@@ -11,5 +11,5 @@ tenacity
 dateparser
 duckdb
 dotenv
-pydips
 networkx
+jieba
