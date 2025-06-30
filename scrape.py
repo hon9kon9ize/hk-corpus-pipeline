@@ -73,12 +73,6 @@ def extract_content_from_html(articles: List["ScraperOutput"]):
                 )
                 continue
 
-            print(
-                len(ref_content),
-                len(article.content),
-                len(html_extract(ref_content, article.content)),
-            )
-
             # Extract text from HTML content
             extracted_article = article.to_dict().copy()
             extracted_article["extracted"] = html_extract(ref_content, article.content)
