@@ -36,6 +36,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - Now 新聞 (Web) - https://news.now.com/
 - AM730 (API) - https://www.am730.com.hk/
 - The Standard (Web) - https://www.thestandard.com.hk/
+- 文匯報 (Web) - https://www.wenweipo.com/
 
 ### New Media / Blogs / Radio / Social Media
 
