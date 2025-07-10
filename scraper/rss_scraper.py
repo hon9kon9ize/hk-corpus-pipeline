@@ -1,7 +1,7 @@
 from scraper.utils import fetch_content
 from typing import Dict, Any
 import feedparser
-from scraper.scraper import Scraper, ScraperOutput
+from scraper.scraper import Scraper, ScraperOutput, DEFAULT_USER_AGENT
 
 
 class RSSScraper(Scraper):
@@ -28,8 +28,10 @@ class RSSScraper(Scraper):
         Asynchronously parses the index page and extracts a list of URLs.
         """
         try:
+            user_agent = self.headers.get("User-Agent", DEFAULT_USER_AGENT)
+
             d = feedparser.parse(
-                self.index_url, agent=self.user_agent, referrer=self.index_url
+                self.index_url, agent=user_agent, referrer=self.index_url
             )
             return d.entries
         except Exception as e:

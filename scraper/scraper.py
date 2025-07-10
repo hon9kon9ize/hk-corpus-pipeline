@@ -7,8 +7,9 @@ from abc import ABC, abstractmethod
 from typing import List, Any, Optional, Literal, Coroutine, Sequence
 from scraper.utils import text_processing
 
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
 DEFAULT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+    "User-Agent": DEFAULT_USER_AGENT,
 }
 
 
