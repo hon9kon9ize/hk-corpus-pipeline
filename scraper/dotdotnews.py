@@ -27,7 +27,6 @@ class DotDotNewsScraper(HTMLScraper):
         )
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
-        # get html content in .tgme_widget_message_text
         href_tag = tag.select_one("h2 > a[href]")
 
         if href_tag is None:
@@ -37,7 +36,7 @@ class DotDotNewsScraper(HTMLScraper):
 
         content = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 

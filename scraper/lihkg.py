@@ -1,21 +1,49 @@
 # Borrow from https://github.com/alphrc/lilm
-
+import uuid
+import hashlib
 import os
 from typing import Literal, List, Dict
-from dataclasses import dataclass
 import requests
 
 
-@dataclass
 class Category:
     cat_id: str
     name: str
     postable: bool
+    items: List["Thread"]
 
     def __init__(self, data: Dict):
         if data is not None:
-            for key, value in data.items():
-                setattr(self, key, value)
+            # for the category in thread object
+            if "cat_id" in data:
+                for key, value in data.items():
+                    setattr(self, key, value)
+            elif "category" in data:
+                for key, value in data["category"].items():
+                    setattr(self, key, value)
+                setattr(self, "items", [Thread(item) for item in data.get("items", [])])
+
+    def from_id(
+        cat_id: int,
+        page: int = 1,
+        count: int = 100,
+        type: str = "now",
+        order: Literal["now", "hot"] = "hot",
+        cookie: str = "",
+    ) -> "Category":
+        url = f"https://lihkg.com/api_v2/thread/category?cat_id={cat_id}&page={page}&count={count}&type={type}&order={order}"
+        headers = get_headers(
+            referer=f"https://lihkg.com/category/{cat_id}", cookie=cookie
+        )
+        print(headers)
+        response = get(url=url, headers=headers)
+
+        print(response)
+
+        if not response or "response" not in response:
+            return None
+
+        return Category(response["response"]) if response else None
 
 
 class Remark:
@@ -110,22 +138,26 @@ class Thread:
             "thread_id": self.thread_id,
             "title": self.title,
             "author": self.user_nickname,
-            "content": self.item_data[0].msg,
-            "thread_vote_score": self.item_data[0].vote_score,
-            "thread_reaction_count": self.item_data[0].like_count
-            + self.item_data[0].dislike_count,
+            "item_data": [],
         }
-        entries = []
-        for post in self.item_data:
-            if post.is_valid():
-                entries.append(thread_entry | post.as_entry())
-        return entries
+        if hasattr(self, "item_data"):
+            thread_entry["content"] = (self.item_data[0].msg,)
+            thread_entry["thread_vote_score"] = (self.item_data[0].vote_score,)
+            thread_entry["thread_reaction_count"] = self.item_data[0].like_count
+            +self.item_data[0].dislike_count
+
+            for post in self.item_data:
+                if post.is_valid():
+                    thread_entry["item_data"].append(post.as_entry())
+
+        return thread_entry
 
     def is_valid(self) -> bool:
-        return (
-            len(self.item_data) > 1
-            and not self.item_data[0].user_nickname == self.item_data[1].user_nickname
-        )
+        # return (
+        #     len(self.item_data) > 1
+        #     and not self.item_data[0].user_nickname == self.item_data[1].user_nickname
+        # )
+        return True
 
     def to_dict(self) -> Dict:
         if not self.is_valid():
@@ -141,14 +173,9 @@ class Thread:
         headers = get_headers(referer=f"https://lihkg.com/thread/{thread_id}/page/1")
         response = get(url=url, headers=headers)
         thread = Thread(response["response"])
-        return {
-            "category": thread.category.name,
-            "title": thread.title,
-            "content": thread.item_data[0].msg,
-        }
+        return thread
 
 
-@dataclass
 class Post:
     dislike_count: int
     display_vote: bool
@@ -213,7 +240,7 @@ def get(url: str, headers: dict) -> dict:
         return {}
 
 
-def get_headers(referer: str) -> dict[str, str]:
+def get_headers(referer: str, cookie="") -> dict[str, str]:
     headers = {
         "Accept": "application/json, text/plain, */*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -225,7 +252,11 @@ def get_headers(referer: str) -> dict[str, str]:
             "HEADERS_USER_AGENT",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
         ),
+        "X-LI-DEVICE": hashlib.sha1(str(uuid.uuid4()).encode("utf-8")).hexdigest(),
+        "X-LI-DEVICE-TYPE": "browser",
+        "Cookie": cookie,
     }
+
     return headers
 
 
@@ -235,11 +266,7 @@ def get_lihkg_new_threads(page=1, count=100):
     """
     api_url = "https://lihkg.com/api_v2/thread/latest"
     params = {"page": page, "count": count}
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-        "Referer": "https://lihkg.com/category/1",
-        "X-Lihkg-Device-Type": "web",
-    }
+    headers = get_headers(referer=f"https://lihkg.com/thread/{thread_id}/page/1")
 
     print(f"Fetching latest {count} threads from API...")
     threads = []

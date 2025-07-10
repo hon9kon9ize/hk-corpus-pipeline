@@ -32,7 +32,6 @@ class RFACantoneseScraper(TelegramScraper):
         return date
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
-        # get html content in .tgme_widget_message_text
         href_tag = tag.select_one(
             ".tgme_widget_message_text > a[href^='https://ca.rfa.org']"
         )

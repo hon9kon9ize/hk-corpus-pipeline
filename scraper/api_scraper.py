@@ -47,7 +47,7 @@ class APIScraper(Scraper):
                 self.index_url,
                 method=self.fetch_index_method,
                 headers={
-                    "User-Agent": self.user_agent,
+                    **self.headers,
                     "Referer": self.index_url,
                     "Content-Type": self.fetch_index_content_type,
                 },

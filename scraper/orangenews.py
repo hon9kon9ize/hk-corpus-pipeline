@@ -29,7 +29,7 @@ class OrangeNewsScraper(APIScraper):
         # NOTE: Replace the content with the full article content
         item["content"] = await fetch_content(
             item["detailsUrl"],
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
 
         return item

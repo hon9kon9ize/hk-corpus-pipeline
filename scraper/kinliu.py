@@ -31,7 +31,7 @@ class KinLiuScraper(HTMLScraper):
         try:
             item = await fetch_json(
                 self.index_url,
-                headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+                headers={**self.headers, "Referer": self.index_url},
             )
             index_soup = BeautifulSoup(item["html"], "html.parser")
 
@@ -63,7 +63,7 @@ class KinLiuScraper(HTMLScraper):
 
         content = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 

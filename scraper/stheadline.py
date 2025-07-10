@@ -9,12 +9,9 @@ if TYPE_CHECKING:
 
 
 class HeadlineScraper(HTMLScraper):
-    def __init__(self, **kwargs: dict):
+    def __init__(self, item_detail_selector: str, **kwargs: dict):
         super().__init__(
-            index_url="https://stheadline.com/realtimenews/即時",
-            category="news",
-            content_type="text/html",
-            index_item_selector=".news-block",
+            index_item_selector="#article-list .news-block",
             item_id_selector="meta[property='og:url'][content]",
             item_title_selector="meta[property='og:title'][content]",
             item_content_selector=None,  # raw html content
@@ -23,10 +20,10 @@ class HeadlineScraper(HTMLScraper):
             item_author_selector="meta[name='publisher'][content]",
             **kwargs,
         )
+        self.item_detail_selector = item_detail_selector
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
-        # get html content in .tgme_widget_message_text
-        href_tag = tag.select_one(".news-detail > a")
+        href_tag = tag.select_one(f"{self.item_detail_selector} > a")
 
         if href_tag is None:
             return None
@@ -38,7 +35,7 @@ class HeadlineScraper(HTMLScraper):
 
         content = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 
@@ -53,11 +50,32 @@ class HeadlineScraper(HTMLScraper):
         return date
 
 
+class HeadlineNewsScraper(HeadlineScraper):
+    def __init__(self, **kwargs: dict):
+        super().__init__(
+            item_detail_selector=".news-detail",
+            index_url="https://stheadline.com/realtimenews/新聞",
+            category="news",
+            content_type="text/html",
+            **kwargs,
+        )
+
+
+class HeadlineColumnsScraper(HeadlineScraper):
+    def __init__(self, **kwargs: dict):
+        super().__init__(
+            item_detail_selector=".column-info",
+            index_url="https://www.stheadline.com/columnists/latest/%E6%9C%80%E6%96%B0",
+            category="columns",
+            content_type="text/html",
+            **kwargs,
+        )
+
+
 if __name__ == "__main__":
     import asyncio
 
-    scraper = HeadlineScraper(max_items=1)
-
+    scraper = HeadlineColumnsScraper(max_items=10)
     articles = asyncio.run(scraper.get_articles())
 
     print(articles)

@@ -31,7 +31,7 @@ This is not a comprehensive list of data sources, and we are open to suggestions
 - 明報 (Web) - https://news.mingpao.com/
 - 香港經濟日報 (RSS) - https://www.hket.com/
 - 橙新聞 (API) - https://www.orangenews.hk/
-- 自由亞洲電台 (API) - https://www.rfa.org/cantonese/
+- ~~自由亞洲電台 (API) - https://www.rfa.org/cantonese/~~ Ended at 2025-06-30
 - TVB News (Web) - https://news.tvb.com/
 - Now 新聞 (Web) - https://news.now.com/
 - AM730 (API) - https://www.am730.com.hk/

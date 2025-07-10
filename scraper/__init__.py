@@ -3,7 +3,7 @@ from scraper.html_scraper import HTMLScraper
 from scraper.rss_scraper import RSSScraper
 from scraper.api_scraper import APIScraper
 from scraper.hk01 import HK01Scraper
-from scraper.stheadline import HeadlineScraper
+from scraper.stheadline import HeadlineNewsScraper, HeadlineColumnsScraper
 from scraper.rthk_zh import RTHKChineseScraper
 from scraper.rthk_en import RTHKEnglishScraper
 from scraper.oncc import ONCCScraper

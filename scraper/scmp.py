@@ -1,6 +1,5 @@
 from datetime import datetime as DateTime
 from scraper.telegram_scraper import TelegramScraper
-from scraper.scraper import ScraperOutput
 from scraper.utils import fetch_content
 from bs4 import BeautifulSoup
 
@@ -24,7 +23,6 @@ class SCMPScraper(TelegramScraper):
         )
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
-        # get html content in .tgme_widget_message_text
         href_tag = tag.select_one(".tgme_widget_message_text > a")
 
         if href_tag is None:
@@ -33,7 +31,7 @@ class SCMPScraper(TelegramScraper):
         article_url = href_tag["href"]
         content = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 

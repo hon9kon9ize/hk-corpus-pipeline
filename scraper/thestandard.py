@@ -23,7 +23,7 @@ class TheStandardScraper(APIScraper):
     async def parse_index(self):
         raw_html = await fetch_content(
             "https://www.thestandard.com.hk/news",
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         # find the cursor from the raw HTML, example: cursor=eyJ2YWx1ZSI6MjAsImZ1bGxMaXN0SWQiOiI5OTRjZTkzN2RmNWMyMTBmZWFkMGYwNWJhNDVjNWU1YiJ9
         cursor_match = re.search(r'cursor=([^"]+)\\"', raw_html)
@@ -42,7 +42,7 @@ class TheStandardScraper(APIScraper):
         # NOTE: Replace the content with the full article content
         item["content"] = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
 
         return item

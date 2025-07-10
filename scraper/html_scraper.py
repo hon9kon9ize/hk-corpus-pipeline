@@ -41,7 +41,7 @@ class HTMLScraper(Scraper):
         try:
             index_page_html = await fetch_content(
                 self.index_url,
-                headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+                headers={**self.headers, "Referer": self.index_url},
             )
 
             if callable(self.index_item_selector):

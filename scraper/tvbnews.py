@@ -33,7 +33,7 @@ class TVBNewsScraper(APIScraper):
         # NOTE: Replace the content with the full article content
         item["content"] = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
 
         return item
