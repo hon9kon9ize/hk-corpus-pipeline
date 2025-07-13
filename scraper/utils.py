@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from aiosocks import Socks5Addr
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(3))
 async def fetch_header_location(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10, headers=None
 ) -> str:
@@ -26,7 +26,7 @@ async def fetch_header_location(
             return response.url
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(3))
 async def fetch_content(
     url: str, conn: Optional["Socks5Addr"] = None, timeout=10, headers=None
 ) -> str:

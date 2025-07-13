@@ -23,27 +23,24 @@ class Category:
                     setattr(self, key, value)
                 setattr(self, "items", [Thread(item) for item in data.get("items", [])])
 
-    def from_id(
+    def get_threads(
         cat_id: int,
         page: int = 1,
         count: int = 100,
         type: str = "now",
-        order: Literal["now", "hot"] = "hot",
-        cookie: str = "",
+        order: Literal["now", "hot"] = "now",
+        headers=None,
     ) -> "Category":
         url = f"https://lihkg.com/api_v2/thread/category?cat_id={cat_id}&page={page}&count={count}&type={type}&order={order}"
-        headers = get_headers(
-            referer=f"https://lihkg.com/category/{cat_id}", cookie=cookie
-        )
-        print(headers)
+        headers = get_headers(headers)
         response = get(url=url, headers=headers)
 
-        print(response)
-
         if not response or "response" not in response:
-            return None
+            return []
 
-        return Category(response["response"]) if response else None
+        category = Category(response["response"])
+
+        return category.items
 
 
 class Remark:
@@ -168,9 +165,9 @@ class Thread:
         return entries
 
     @staticmethod
-    def from_id(thread_id: int) -> dict:
+    def from_id(thread_id: int, headers=None) -> dict:
         url = f"https://lihkg.com/api_v2/thread/{thread_id}/page/1?order=reply_time"
-        headers = get_headers(referer=f"https://lihkg.com/thread/{thread_id}/page/1")
+        headers = get_headers(headers)
         response = get(url=url, headers=headers)
         thread = Thread(response["response"])
         return thread
@@ -240,33 +237,35 @@ def get(url: str, headers: dict) -> dict:
         return {}
 
 
-def get_headers(referer: str, cookie="") -> dict[str, str]:
+def get_headers(headers=None) -> dict[str, str]:
     headers = {
         "Accept": "application/json, text/plain, */*",
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "en-US,en;q=0.9",
         "Connection": "keep-alive",
         "Host": "lihkg.com",
-        "Referer": referer,
         "User-Agent": os.getenv(
             "HEADERS_USER_AGENT",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
         ),
+        "Referer": "https://lihkg.com/category/5",
         "X-LI-DEVICE": hashlib.sha1(str(uuid.uuid4()).encode("utf-8")).hexdigest(),
         "X-LI-DEVICE-TYPE": "browser",
-        "Cookie": cookie,
     }
+
+    if headers:
+        headers.update(headers)
 
     return headers
 
 
-def get_lihkg_new_threads(page=1, count=100):
+def get_lihkg_new_threads(page=1, count=60, headers=None) -> List[Thread]:
     """
     Fetches the latest threads from LIHKG's API and returns a list of Thread objects.
     """
     api_url = "https://lihkg.com/api_v2/thread/latest"
     params = {"page": page, "count": count}
-    headers = get_headers(referer=f"https://lihkg.com/thread/{thread_id}/page/1")
+    headers = get_headers(headers)
 
     print(f"Fetching latest {count} threads from API...")
     threads = []
