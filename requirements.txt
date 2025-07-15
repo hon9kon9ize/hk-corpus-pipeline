@@ -13,3 +13,4 @@ duckdb
 dotenv
 networkx
 jieba
+boto3

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from bs4.element import Tag, ResultSet  # for type hinting
 
 
-class MingPaoScraper(HTMLScraper):
+class HeadlineScraper(HTMLScraper):
     def __init__(self, **kwargs: dict):
         super().__init__(
             index_url="https://news.mingpao.com/ins/%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E/main",
@@ -20,12 +20,13 @@ class MingPaoScraper(HTMLScraper):
             item_content_selector=None,  # raw html content
             item_date_selector=".date",  # 2025年6月20日星期五
             item_url_selector="meta[property='og:url'][content]",  # <meta property="og:url" content="???">
-            item_author_selector="meta[property='article:author'][content]",
+            item_author_selector="meta[name='article:author'][content]",
             **kwargs,
         )
 
     async def fetch_article(self, tag: "ResultSet[Tag]") -> "ResultSet[Tag]":
-        href_tag = tag.select("h2 > a[href]")[1]
+        # get html content in .tgme_widget_message_text
+        href_tag = tag.select_one("figure a[href]")
 
         if href_tag is None:
             return None
@@ -33,37 +34,31 @@ class MingPaoScraper(HTMLScraper):
         article_url = href_tag["href"]
 
         if not article_url.startswith("http"):
-            if article_url.startswith(".."):
-                article_url = "https://news.mingpao.com" + article_url[2:]
-            else:
-                article_url = "https://news.mingpao.com" + article_url
+            article_url = "https://news.mingpao.com/" + article_url
+        elif article_url.startswith(".."):
+            article_url = "https://news.mingpao.com/" + article_url[2:]
 
         content = await fetch_content(
             article_url,
-            headers={**self.headers, "Referer": self.index_url},
+            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 
         return content_soup
 
     def _parse_date(self, date: str) -> DateTime:
-        # Handles date format like '2025年6月20日星期五'
         try:
-            # Remove '星期' and the weekday for parsing
-            import re
+            date = DateTime.strptime(date, "%Y年%m月%d日星期%a")
+        except ValueError:
+            date = DateTime.now()
 
-            date_clean = re.sub(r"星期.+$", "", date)
-            date_obj = DateTime.strptime(date_clean.strip(), "%Y年%m月%d日")
-        except Exception:
-            date_obj = DateTime.now()
-
-        return date_obj
+        return date
 
 
 if __name__ == "__main__":
     import asyncio
 
-    scraper = MingPaoScraper()
+    scraper = HeadlineScraper(max_items=1)
 
     articles = asyncio.run(scraper.get_articles())
 
