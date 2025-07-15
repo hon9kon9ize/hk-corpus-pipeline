@@ -11,14 +11,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Build Docker image
-        run: docker build -t scrape . --file images/Dockerfile
+        run: docker build -t container . --file images/Dockerfile
       - name: Run Docker image
+        env:
+            R2_KEY_ID: ${{ vars.R2_KEY_ID }}
+            R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+            R2_ACCOUNT_ID: ${{ vars.R2_ACCOUNT_ID }}
+            R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
         run: |
           docker run --rm \
-            -e R2_KEY_ID="${{ env.R2_KEY_ID }}" \
-            -e R2_SECRET_KEY="${{ secrets.R2_SECRET_KEY }}" \
-            -e R2_ACCOUNT_ID="${{ env.R2_ACCOUNT_ID }}" \
-            -e R2_BUCKET_NAME="${{ env.R2_BUCKET_NAME }}" \
-            scrape \
+            -e R2_KEY_ID="$R2_KEY_ID" \
+            -e R2_SECRET_KEY="$R2_SECRET_KEY" \
+            -e R2_ACCOUNT_ID="$R2_ACCOUNT_ID" \
+            -e R2_BUCKET_NAME="$R2_BUCKET_NAME" \
+            container \
             archive.py \
             --day-ago 3  # Archive data from 3 days ago

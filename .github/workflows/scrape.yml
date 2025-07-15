@@ -11,10 +11,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Build Docker image
-        run: docker build -t scrape . --file images/Dockerfile
+        run: docker build -t container . --file images/Dockerfile
       - name: Run Docker image
         run: |
           docker run --rm \
             -e PIPELINE_ENDPOINT="${{ secrets.PIPELINE_ENDPOINT }}" \
-            scrape \
+            container \
             scrape.py
