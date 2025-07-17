@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from bs4.element import Tag, ResultSet  # for type hinting
 
 
-class HeadlineScraper(HTMLScraper):
+class MingPaoScraper(HTMLScraper):
     def __init__(self, **kwargs: dict):
         super().__init__(
             index_url="https://news.mingpao.com/ins/%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E/main",
@@ -40,7 +40,7 @@ class HeadlineScraper(HTMLScraper):
 
         content = await fetch_content(
             article_url,
-            headers={"User-Agent": self.user_agent, "Referer": self.index_url},
+            headers={**self.headers, "Referer": self.index_url},
         )
         content_soup = BeautifulSoup(content, "html.parser")
 
@@ -58,7 +58,7 @@ class HeadlineScraper(HTMLScraper):
 if __name__ == "__main__":
     import asyncio
 
-    scraper = HeadlineScraper(max_items=1)
+    scraper = MingPaoScraper(max_items=1)
 
     articles = asyncio.run(scraper.get_articles())
 
