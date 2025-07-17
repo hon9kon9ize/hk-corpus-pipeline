@@ -1,6 +1,6 @@
 # Hong Kong Web Archive Pipeline
 
-[![.github/workflows/scrape.yml](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml/badge.svg)](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml)
+[![.github/workflows/scrape.yml](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml/badge.svg)](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/scrape.yml) [![.github/workflows/archive.yml](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/archive.yml/badge.svg)](https://github.com/hon9kon9ize/yue-corpus-pipeline/actions/workflows/archive.yml)
 
 The goal of this project is create a pipeline and tools for scraping and processing Hong Kong web data.
 
