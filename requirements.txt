@@ -14,3 +14,4 @@ dotenv
 networkx
 jieba
 boto3
+pyarrow
